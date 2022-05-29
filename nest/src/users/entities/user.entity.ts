@@ -14,7 +14,7 @@ export class User {
     @Prop({ required: true, default: false })
     @Field(() => Boolean, { description: 'Is user confirmed' })
     isConfirmed: boolean
-  
+
     @Prop({ required: true, immutable: true, unique: true })
     @Field(() => String, { description: 'Email' })
     email: string
@@ -34,8 +34,8 @@ export class User {
     password: string
 
     // password_remind_hash PREV
-    @Field(() => String || null, { nullable: true, description: 'Token to restart email' })
-    password_token: string | null
+    @Field(() => String, { nullable: true, description: 'Token to restart email' })
+    password_token?: string
 
     @Prop({ required: true })
     @Field(() => Boolean, { description: 'Sex of user' })
@@ -46,9 +46,9 @@ export class User {
     meal_number: number
 
     // users_roles_ID PREV
-    @Prop({ required: true, immutable: true, default: 1 })
-    @Field(() => Int, { description: 'Role of user' })
-    role: number
+    @Prop({ required: true, immutable: true, default: false })
+    @Field(() => Boolean, { description: 'Is user an Admin' })
+    isAdmin: boolean
 
     // public_profile PREV NUMBER
     @Prop({ required: true, default: true })
@@ -74,11 +74,6 @@ export class User {
     // coach_analyze: {
     //     type: Boolean,
     //     default: false
-    // },
-    // premium: {
-    //     type: Date,
-    //     default: new Date(),
-    //     immutable: true
     // },
     // twitter: {
     //     type: String,
