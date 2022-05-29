@@ -30,15 +30,58 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type User {
+  """_id of user"""
+  _id: String!
+
+  """Is user confirmed"""
+  isConfirmed: Boolean!
+
+  """Email"""
+  email: String!
+
+  """token to confirm email"""
+  email_token: String!
+
+  """Login"""
+  login: String!
+
+  """Length of login"""
+  l: Int!
+
+  """Hash of password"""
+  password: String!
+
+  """Token to restart email"""
+  password_token: String
+
+  """Sex of user"""
+  sex: Boolean!
+
+  """Number of meals of user"""
+  meal_number: Int!
+
+  """Role of user"""
+  role: Int!
+
+  """Is profile public"""
+  isPublic: Int!
+}
+
 type Query {
   products: [Product!]!
   product(_id: String!): Product!
+  users: [User!]!
+  user(id: Int!): User!
 }
 
 type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(_id: String!): Product!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
 }
 
 input CreateProductInput {
@@ -68,6 +111,17 @@ input UpdateProductInput {
   """Number of grams per 100g/ml"""
   f: Float
   _id: String!
+}
+
+input CreateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 type Subscription {

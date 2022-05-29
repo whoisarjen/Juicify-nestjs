@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import config from './config/common.config';
 import { GraphQLModuleUtils } from './utils/GraphQLModule.utils';
+import { UsersModule } from './users/users.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { GraphQLModuleUtils } from './utils/GraphQLModule.utils';
         GraphQLModuleUtils,
         MongooseModule.forRoot(process.env.MONGODB_STRING),
         ProductsModule,
+        UsersModule,
     ],
     controllers: [AppController],
     providers: [AppService],

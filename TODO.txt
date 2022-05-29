@@ -27,3 +27,5 @@ synchro (something is off with after offline)
 password reset message is sending few times
 
 rewrite redux
+
+isConfirmed need to be true for all already existing
