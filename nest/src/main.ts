@@ -7,6 +7,6 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
 
     app.enableCors(configService.get('CORS'));
-    await app.listen(process.env.PORT);
+    await app.listen(configService.get('PORT'));
 }
 bootstrap();

@@ -75,7 +75,7 @@ type Query {
   products: [Product!]!
   product(_id: String!): Product!
   users: [User!]!
-  user(id: Int!): User!
+  user(login: String!): User!
 }
 
 type Mutation {

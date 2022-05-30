@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 export type UserDocument = User & Document;
 
@@ -140,6 +141,14 @@ export class User {
     //     default: 10
     // },
     // macronutrients: [macronutrientsSchema]
+    
+    comparePassword: Function
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+    const user: User = this;
+    
+    return bcrypt.compare(candidatePassword, user.password).catch(e => false)
+}

@@ -29,3 +29,4 @@ password reset message is sending few times
 rewrite redux
 
 isConfirmed need to be true for all already existing
+cutting information in service for user

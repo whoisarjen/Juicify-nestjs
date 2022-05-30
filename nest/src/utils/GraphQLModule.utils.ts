@@ -17,7 +17,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
                     'graphql-ws': true,
                     'subscriptions-transport-ws': true,
                 },
-                // installSubscriptionHandlers: true,
                 cors: configService.get('CORS'),
             }),
             inject: [ConfigService],
