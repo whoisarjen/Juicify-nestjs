@@ -9,18 +9,19 @@ export class AuthService {
 		private jwtService: JwtService
 	) {}
 
-	async validateUser(login: string, password: string): Promise<any> {
-		const user = await this.usersService.findOne(login);
-		if (user && await user.comparePassword(password)) {
-			const { password, ...result } = user;
-			return result;
-		}
-		return null;
-	}
+	// IS IT AUTO CONNECTED CLASS TO GUARDIAN?
+	// async validateUser(login: string, password: string): Promise<any> {
+	// 	const user = await this.usersService.findOne(login);
+	// 	if (user && await user.comparePassword(password)) {
+	// 		const { password, ...result } = user;
+	// 		return result;
+	// 	}
+	// 	return null;
+	// }
 
 	async login({ login, password }: { login: string, password: string }) {
-		const user = await this.validateUser(login, password)
-		if (!user) {
+		const user = await this.usersService.findOne(login);
+		if (!user || !(await user.comparePassword(password))) {
 			throw new NotFoundException()
 		}
 		return {
