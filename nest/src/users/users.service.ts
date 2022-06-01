@@ -11,6 +11,8 @@ import { omit } from 'lodash';
 import { signJwt } from 'src/utils/jwt.utils';
 import { ConfigService } from '@nestjs/config';
 import { USER_OMITTED_PROPERTIES } from 'src/utils/user.utils'
+import { RequestRefreshPasswordInput } from './dto/request-refresh-password.input';
+import { ConfirmRefreshPasswordInput } from './dto/confirm-refresh-password.input';
 
 @Injectable()
 export class UsersService {
@@ -68,6 +70,24 @@ export class UsersService {
     logout(context: Ctx) {
         context.res.cookie('token', '', { ...this.configService.get('COOKIE_OPTIONS'), maxAge: 0 })
         return null
+    }
+
+    async requestRefreshPassword(requestRefreshPasswordInput: RequestRefreshPasswordInput) {
+        const refreshPasswordToken = nanoid(32)
+        const user = await this.userModel.findOneAndUpdate(requestRefreshPasswordInput, { refreshPasswordToken })
+
+        if (!user) {
+            throw new NotFoundException()
+        }
+
+        console.log('Send email here!')
+
+        return null
+    }
+
+    confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput) {
+        console.log(confirmRefreshPasswordInput)
+        return
     }
 
     // findAll() {

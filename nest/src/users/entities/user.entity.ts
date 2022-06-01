@@ -27,6 +27,7 @@ export class User {
     @Field(() => String, { description: 'Login' })
     login: string
 
+    @Prop()
     @Field(() => Int, { description: 'Length of login' })
     l: number
 
@@ -34,6 +35,8 @@ export class User {
     password: string
 
     // password_remind_hash PREV
+    @Prop()
+    @Field(() => String, { description: 'Refresh password token' })
     refreshPasswordToken?: string
 
     @Prop({ required: true })
@@ -54,7 +57,6 @@ export class User {
     @Field(() => Boolean, { description: 'Is profile public' })
     isPublic: boolean
 
-    // banned
     @Prop({ required: true, default: false })
     @Field(() => Boolean, { description: 'Is account banned' })
     isBanned: boolean
@@ -142,7 +144,7 @@ export class User {
     // macronutrients: [macronutrientsSchema]
     
     comparePassword: (candidatePassword: string) => Promise<boolean>
- }
+}
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
