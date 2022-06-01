@@ -6,20 +6,11 @@ type User {
   """_id of user"""
   _id: ID!
 
-  """Is user confirmed"""
-  isConfirmed: Boolean!
-
-  """Email"""
-  email: String!
-
   """Login"""
   login: String!
 
   """Length of login"""
   l: Int!
-
-  """Refresh password token"""
-  refreshPasswordToken: String!
 
   """Sex of user"""
   sex: Boolean!
@@ -35,6 +26,30 @@ type User {
 
   """Is account banned"""
   isBanned: Boolean!
+
+  """Height"""
+  height: Int!
+
+  """Twitter"""
+  twitter: String!
+
+  """Website"""
+  website: String!
+
+  """Facebook"""
+  facebook: String!
+
+  """Instagram"""
+  instagram: String!
+
+  """Name"""
+  name: String!
+
+  """Surname"""
+  surname: String!
+
+  """description"""
+  description: String!
 }
 
 type Product {
@@ -118,6 +133,9 @@ input CreateUserInput {
 
   """Sex"""
   sex: Boolean!
+
+  """Height"""
+  height: Int!
 }
 
 input ConfirmUserInput {

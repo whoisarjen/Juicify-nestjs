@@ -16,11 +16,9 @@ export class User {
 
     // email_confirmation PREV
     @Prop({ required: true, default: false })
-    @Field(() => Boolean, { description: 'Is user confirmed' })
     isConfirmed: boolean
 
     @Prop({ required: true, immutable: true, unique: true })
-    @Field(() => String, { description: 'Email' })
     email: string
 
     @Prop({ required: true, immutable: true, unique: true })
@@ -36,7 +34,6 @@ export class User {
 
     // password_remind_hash PREV
     @Prop()
-    @Field(() => String, { description: 'Refresh password token' })
     refreshPasswordToken?: string
 
     @Prop({ required: true })
@@ -61,10 +58,38 @@ export class User {
     @Field(() => Boolean, { description: 'Is account banned' })
     isBanned: boolean
 
-    // height: {
-    //     type: Number,
-    //     required: true
-    // },
+    @Prop({ required: true })
+    @Field(() => Int, { description: 'Height' })
+    height: number
+
+    @Prop()
+    @Field(() => String, { description: 'Twitter' })
+    twitter?: string
+    
+    @Prop()
+    @Field(() => String, { description: 'Website' })
+    website?: string
+    
+    @Prop()
+    @Field(() => String, { description: 'Facebook' })
+    facebook?: string
+    
+    @Prop()
+    @Field(() => String, { description: 'Instagram' })
+    instagram?: string
+    
+    @Prop()
+    @Field(() => String, { description: 'Name' })
+    name?: string
+    
+    @Prop()
+    @Field(() => String, { description: 'Surname' })
+    surname?: string
+    
+    @Prop()
+    @Field(() => String, { description: 'description' })
+    description?: string
+
     // birth: {
     //     type: String,
     //     required: true
@@ -80,34 +105,6 @@ export class User {
     // coach_analyze: {
     //     type: Boolean,
     //     default: false
-    // },
-    // twitter: {
-    //     type: String,
-    //     default: ''
-    // },
-    // website: {
-    //     type: String,
-    //     default: ''
-    // },
-    // facebook: {
-    //     type: String,
-    //     default: ''
-    // },
-    // instagram: {
-    //     type: String,
-    //     default: ''
-    // },
-    // name: {
-    //     type: String,
-    //     default: ''
-    // },
-    // surname: {
-    //     type: String,
-    //     default: ''
-    // },
-    // description: {
-    //     type: String,
-    //     default: ''
     // },
     // avatar: {
     //     type: Boolean,

@@ -23,7 +23,7 @@ export class UsersService {
         private configService: ConfigService,
     ) {}
 
-    create(createUserInput: CreateUserInput) {
+    async create(createUserInput: CreateUserInput) {
         const confirmationToken = nanoid(32)
 
         return this.userModel.create({
@@ -50,7 +50,7 @@ export class UsersService {
         }
 
         if (!user.isConfirmed) {
-            this.logout(context)
+            await this.logout(context)
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
                 error: 'Account is not activated',
@@ -58,7 +58,7 @@ export class UsersService {
         }
 
         if (user.isBanned) {
-            this.logout(context)
+            await this.logout(context)
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
                 error: 'This Account Has Been Suspended',
@@ -88,7 +88,7 @@ export class UsersService {
         return user
     }
 
-    logout(context: Ctx) {
+    async logout(context: Ctx) {
         context.res.cookie(
             this.configService.get('TOKEN_NAME'),
             '',
