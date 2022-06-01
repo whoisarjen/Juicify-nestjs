@@ -48,8 +48,22 @@ type User {
   """Surname"""
   surname: String!
 
-  """description"""
+  """Description"""
   description: String!
+
+  """Macronutrients"""
+  macronutrients: [Macronutrients!]!
+}
+
+type Macronutrients {
+  """Number of proteins per day"""
+  proteins: Int!
+
+  """Number of carbs per day"""
+  carbs: Int!
+
+  """Number of fats per day"""
+  fats: Int!
 }
 
 type Product {

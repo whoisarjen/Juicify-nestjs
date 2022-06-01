@@ -87,7 +87,7 @@ export class User {
     surname?: string
     
     @Prop()
-    @Field(() => String, { description: 'description' })
+    @Field(() => String, { description: 'Description' })
     description?: string
 
     // birth: {
@@ -138,8 +138,11 @@ export class User {
     //     type: Number,
     //     default: 10
     // },
-    // macronutrients: [macronutrientsSchema]
-    
+
+    @Prop({ required: true, default: [] })
+    @Field(() => [Macronutrients], { description: 'Macronutrients' })
+    macronutrients: [Macronutrients]
+
     comparePassword: (candidatePassword: string) => Promise<boolean>
 }
 
@@ -180,3 +183,19 @@ UserSchema.pre("save", async function (next) {
 
     return next();
 })
+
+@Schema()
+@ObjectType()
+export class Macronutrients {
+    @Prop({ required: true, default: 0 })
+    @Field(() => Int, { description: 'Number of proteins per day' })
+    proteins: number
+
+    @Prop({ required: true, default: 0 })
+    @Field(() => Int, { description: 'Number of carbs per day' })
+    carbs: number
+
+    @Prop({ required: true, default: 0 })
+    @Field(() => Int, { description: 'Number of fats per day' })
+    fats: number
+}
