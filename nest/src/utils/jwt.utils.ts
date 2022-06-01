@@ -27,17 +27,14 @@ export function signJwt(payload, settings) {
   	return jwt.sign(payload, PRIVATE_KEY, { algorithm: 'RS256', ...settings });
 }
 
-export function decode(token: string) {
+export async function decode(token: string) {
 	if (!token) {
 		return null
 	}
 
 	try {
-		const decoded = jwt.verify(token, PUBLIC_KEY);
-
-		return decoded;
+		return jwt.verify(token, PUBLIC_KEY);
 	} catch (error) {
-		console.error(`error`, error);
 		return null;
 	}
 }

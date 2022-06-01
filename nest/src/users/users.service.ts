@@ -70,7 +70,7 @@ export class UsersService {
             this.configService.get('TOKEN_SETTINGS'),
         )
         const refresh_token = signJwt(
-            pick(user.toJSON(), ['_id']),
+            pick(user.toJSON(), ['login']),
             this.configService.get('REFRESH_TOKEN_SETTINGS'),
         )
 
