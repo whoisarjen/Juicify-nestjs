@@ -4,7 +4,7 @@
 
 type User {
   """_id of user"""
-  _id: String!
+  _id: ID!
 
   """Is user confirmed"""
   isConfirmed: Boolean!
@@ -12,20 +12,11 @@ type User {
   """Email"""
   email: String!
 
-  """token to confirm email"""
-  email_token: String!
-
   """Login"""
   login: String!
 
   """Length of login"""
   l: Int!
-
-  """Hash of password"""
-  password: String!
-
-  """Token to restart email"""
-  password_token: String
 
   """Sex of user"""
   sex: Boolean!
@@ -37,7 +28,10 @@ type User {
   isAdmin: Boolean!
 
   """Is profile public"""
-  isPublic: Int!
+  isPublic: Boolean!
+
+  """Is account banned"""
+  isBanned: Boolean!
 }
 
 type Product {
@@ -74,8 +68,15 @@ scalar DateTime
 type Query {
   products: [Product!]!
   product(_id: String!): Product!
-  users: [User!]!
-  user(login: String!): User!
+  login(loginUserInput: LoginUserInput!): User!
+}
+
+input LoginUserInput {
+  """Login"""
+  login: String!
+
+  """Password"""
+  password: String!
 }
 
 type Mutation {
@@ -83,8 +84,7 @@ type Mutation {
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(_id: String!): Product!
   createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
+  confirmUser(confirmUserInput: ConfirmUserInput!): User!
 }
 
 input CreateProductInput {
@@ -117,14 +117,25 @@ input UpdateProductInput {
 }
 
 input CreateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Email"""
+  email: String!
+
+  """Login"""
+  login: String!
+
+  """Password"""
+  password: String!
+
+  """Sex"""
+  sex: Boolean!
 }
 
-input UpdateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input ConfirmUserInput {
+  """Email"""
+  email: String!
+
+  """Confirmation token"""
+  confirmationToken: String!
 }
 
 type Subscription {

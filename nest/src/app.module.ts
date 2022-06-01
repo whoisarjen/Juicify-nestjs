@@ -6,7 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 import config from './config/common.config';
 import { GraphQLModuleUtils } from './utils/GraphQLModule.utils';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
 import { MongooseModuleUtils } from './utils/MongooseModule.utils';
 
 @Module({
@@ -20,7 +19,6 @@ import { MongooseModuleUtils } from './utils/MongooseModule.utils';
         MongooseModuleUtils,
         ProductsModule,
         UsersModule,
-        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],

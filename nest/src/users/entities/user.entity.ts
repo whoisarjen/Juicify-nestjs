@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -8,8 +8,11 @@ export type UserDocument = User & Document;
 @Schema({ timestamps: true })
 @ObjectType()
 export class User {
-    @Field(() => String, { description: '_id of user' })
+    @Field(() => ID, { description: '_id of user' })
     _id: mongoose.Schema.Types.ObjectId;
+
+    @Prop({ required: true })
+    confirmationToken: string
 
     // email_confirmation PREV
     @Prop({ required: true, default: false })
@@ -20,9 +23,6 @@ export class User {
     @Field(() => String, { description: 'Email' })
     email: string
 
-    @Field(() => String, { description: 'token to confirm email' })
-    email_token: string
-
     @Prop({ required: true, immutable: true, unique: true })
     @Field(() => String, { description: 'Login' })
     login: string
@@ -31,12 +31,10 @@ export class User {
     l: number
 
     @Prop({ required: true })
-    @Field(() => String, { description: 'Hash of password' })
     password: string
 
     // password_remind_hash PREV
-    @Field(() => String, { nullable: true, description: 'Token to restart email' })
-    password_token?: string
+    refreshPasswordToken?: string
 
     @Prop({ required: true })
     @Field(() => Boolean, { description: 'Sex of user' })
@@ -53,8 +51,13 @@ export class User {
 
     // public_profile PREV NUMBER
     @Prop({ required: true, default: true })
-    @Field(() => Int, { description: 'Is profile public' })
+    @Field(() => Boolean, { description: 'Is profile public' })
     isPublic: boolean
+
+    // banned
+    @Prop({ required: true, default: false })
+    @Field(() => Boolean, { description: 'Is account banned' })
+    isBanned: boolean
 
     // height: {
     //     type: Number,
@@ -104,10 +107,6 @@ export class User {
     //     type: String,
     //     default: ''
     // },
-    // banned: {
-    //     type: Boolean,
-    //     default: false
-    // },
     // avatar: {
     //     type: Boolean,
     //     default: false
@@ -142,13 +141,42 @@ export class User {
     // },
     // macronutrients: [macronutrientsSchema]
     
-    comparePassword: Function
-}
+    comparePassword: (candidatePassword: string) => Promise<boolean>
+ }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.index({ login: 1 })
 
 UserSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
     const user: User = this;
     
     return bcrypt.compare(candidatePassword, user.password).catch(e => false)
 }
+
+UserSchema.pre("save", async function (next) {
+    let user: any = this
+
+    if (user.isNew) {
+        let macronutrients = []
+        for (let i = 0; i < 7; i++) {
+            macronutrients.push({
+                proteins: 0,
+                carbs: 0,
+                fats: 0
+            })
+        }
+        user.macronutrients = macronutrients
+        user.l = user.login.length
+    }
+
+    if (!user.isModified('password')) {
+        return next();
+    }
+
+    const salt = await bcrypt.genSalt(parseInt(process.env.SALT_WORK_FACTORY as string) || 10);
+    const hash = await bcrypt.hashSync(user.password, salt);
+    user.password = hash;
+
+    return next();
+})
