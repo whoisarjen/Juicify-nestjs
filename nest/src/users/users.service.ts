@@ -6,11 +6,11 @@ import { Ctx } from 'src/types/context.type';
 import { ConfirmUserInput } from './dto/confirm-user.input';
 import { CreateUserInput } from './dto/create-user.input';
 import { LoginUserInput } from './dto/login-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
 import { User, UserDocument } from './entities/user.entity';
 import { omit } from 'lodash';
 import { signJwt } from 'src/utils/jwt.utils';
 import { ConfigService } from '@nestjs/config';
+import { USER_OMITTED_PROPERTIES } from 'src/utils/user.utils'
 
 @Injectable()
 export class UsersService {
@@ -35,14 +35,15 @@ export class UsersService {
         return user;
     }
 
-    async login({ login, password }: LoginUserInput, { res }: Ctx) {
+    async login({ login, password }: LoginUserInput, context: Ctx, isRefresh?: boolean) {
         const user = await this.userModel.findOne({ login })
 
-        if (!user || !(await user.comparePassword(password))) {
+        if (!user || (!(await user.comparePassword(password)) && !isRefresh)) {
             throw new NotFoundException()
         }
 
         if (!user.isConfirmed) {
+            this.logout(context)
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
                 error: 'Account is not activated',
@@ -50,17 +51,23 @@ export class UsersService {
         }
 
         if (user.isBanned) {
+            this.logout(context)
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
                 error: 'This Account Has Been Suspended',
             }, HttpStatus.FORBIDDEN);
         }
 
-        const token = signJwt(omit(user.toJSON(), ['password', 'isConfirmed']))
+        const token = signJwt(omit(user.toJSON(), USER_OMITTED_PROPERTIES))
 
-        res.cookie('token', token, this.configService.get('COOKIE_OPTIONS'))
+        context.res.cookie('token', token, this.configService.get('COOKIE_OPTIONS'))
 
         return user
+    }
+
+    logout(context: Ctx) {
+        context.res.cookie('token', '', { ...this.configService.get('COOKIE_OPTIONS'), maxAge: 0 })
+        return null
     }
 
     // findAll() {
