@@ -69,11 +69,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Query {
-  products: [Product!]!
-  product(_id: String!): Product!
   login(loginUserInput: LoginUserInput!): User
+  logout: User
   requestRefreshPassword(requestRefreshPasswordInput: RequestRefreshPasswordInput!): User
   confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput!): User
+  products: [Product!]!
+  product(_id: String!): Product!
 }
 
 input LoginUserInput {
@@ -98,11 +99,33 @@ input ConfirmRefreshPasswordInput {
 }
 
 type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  confirmUser(confirmUserInput: ConfirmUserInput!): User!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(_id: String!): Product!
-  createUser(createUserInput: CreateUserInput!): User!
-  confirmUser(confirmUserInput: ConfirmUserInput!): User!
+}
+
+input CreateUserInput {
+  """Email"""
+  email: String!
+
+  """Login"""
+  login: String!
+
+  """Password"""
+  password: String!
+
+  """Sex"""
+  sex: Boolean!
+}
+
+input ConfirmUserInput {
+  """Email"""
+  email: String!
+
+  """Confirmation token"""
+  confirmationToken: String!
 }
 
 input CreateProductInput {
@@ -132,28 +155,6 @@ input UpdateProductInput {
   """Number of grams per 100g/ml"""
   f: Float
   _id: String!
-}
-
-input CreateUserInput {
-  """Email"""
-  email: String!
-
-  """Login"""
-  login: String!
-
-  """Password"""
-  password: String!
-
-  """Sex"""
-  sex: Boolean!
-}
-
-input ConfirmUserInput {
-  """Email"""
-  email: String!
-
-  """Confirmation token"""
-  confirmationToken: String!
 }
 
 type Subscription {

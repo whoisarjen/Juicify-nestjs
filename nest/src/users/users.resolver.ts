@@ -28,6 +28,11 @@ export class UsersResolver {
     }
 
     @Query(() => User, { nullable: true })
+    logout(@Context() context: Ctx) {
+        return this.usersService.logout(context);
+    }
+
+    @Query(() => User, { nullable: true })
     requestRefreshPassword(@Args('requestRefreshPasswordInput') requestRefreshPasswordInput: RequestRefreshPasswordInput) {
         return this.usersService.requestRefreshPassword(requestRefreshPasswordInput);
     }

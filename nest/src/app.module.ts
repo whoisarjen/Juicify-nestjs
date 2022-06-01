@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { ConfigModule } from '@nestjs/config';
 import config from './config/common.config';
-import { GraphQLModuleUtils } from './utils/GraphQLModule.utils';
+import { GraphQLModuleUtils } from './utils/graphQLModule.utils';
 import { UsersModule } from './users/users.module';
-import { MongooseModuleUtils } from './utils/MongooseModule.utils';
+import { MongooseModuleUtils } from './utils/mongooseModule.utils';
+import { MailerModuleUtils } from './utils/mailerModule.utils';
 
 @Module({
     imports: [
@@ -15,10 +16,11 @@ import { MongooseModuleUtils } from './utils/MongooseModule.utils';
             isGlobal: true,
             load: [config],
         }),
+        MailerModuleUtils,
         GraphQLModuleUtils,
         MongooseModuleUtils,
-        ProductsModule,
         UsersModule,
+        ProductsModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -23,8 +23,8 @@ LFib1ZXwlJ2635lp+X1h2ij8w1IMYkCtkpcaS9J1NWyRp2YGRFIb4fSu1DLVeBEt
 +JoQhUikQmmbYEgrqQIDAQAB
 -----END PUBLIC KEY-----`;
 
-export function signJwt(payload) {
-  	return jwt.sign(payload, PRIVATE_KEY, { algorithm: 'RS256' });
+export function signJwt(payload, settings) {
+  	return jwt.sign(payload, PRIVATE_KEY, { algorithm: 'RS256', ...settings });
 }
 
 export function decode(token: string) {

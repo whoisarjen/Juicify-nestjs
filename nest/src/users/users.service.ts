@@ -7,24 +7,29 @@ import { ConfirmUserInput } from './dto/confirm-user.input';
 import { CreateUserInput } from './dto/create-user.input';
 import { LoginUserInput } from './dto/login-user.input';
 import { User, UserDocument } from './entities/user.entity';
-import { omit } from 'lodash';
+import { omit, pick } from 'lodash';
 import { signJwt } from 'src/utils/jwt.utils';
 import { ConfigService } from '@nestjs/config';
 import { USER_OMITTED_PROPERTIES } from 'src/utils/user.utils'
 import { RequestRefreshPasswordInput } from './dto/request-refresh-password.input';
 import { ConfirmRefreshPasswordInput } from './dto/confirm-refresh-password.input';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User.name) private userModel: Model<UserDocument>,
+        private mailerService: MailerService,
         private configService: ConfigService,
     ) {}
 
     create(createUserInput: CreateUserInput) {
         const confirmationToken = nanoid(32)
 
-        return this.userModel.create({ ...createUserInput, confirmationToken });
+        return this.userModel.create({
+            ...createUserInput,
+            confirmationToken,
+        });
     }
 
     async confirm(confirmUserInput: ConfirmUserInput) {
@@ -60,34 +65,90 @@ export class UsersService {
             }, HttpStatus.FORBIDDEN);
         }
 
-        const token = signJwt(omit(user.toJSON(), USER_OMITTED_PROPERTIES))
+        const token = signJwt(
+            omit(user.toJSON(), USER_OMITTED_PROPERTIES),
+            this.configService.get('TOKEN_SETTINGS'),
+        )
+        const refresh_token = signJwt(
+            pick(user.toJSON(), ['_id']),
+            this.configService.get('REFRESH_TOKEN_SETTINGS'),
+        )
 
-        context.res.cookie('token', token, this.configService.get('COOKIE_OPTIONS'))
+        context.res.cookie(
+            this.configService.get('TOKEN_NAME'),
+            token,
+            this.configService.get('COOKIE_OPTIONS'),
+        )
+        context.res.cookie(
+            this.configService.get('REFRESH_TOKEN_NAME'),
+            refresh_token,
+            this.configService.get('COOKIE_OPTIONS'),
+        )
 
         return user
     }
 
     logout(context: Ctx) {
-        context.res.cookie('token', '', { ...this.configService.get('COOKIE_OPTIONS'), maxAge: 0 })
+        context.res.cookie(
+            this.configService.get('TOKEN_NAME'),
+            '',
+            {
+                ...this.configService.get('COOKIE_OPTIONS'),
+                maxAge: 0,
+            },
+        )
+        context.res.cookie(
+            this.configService.get('REFRESH_TOKEN_NAME'),
+            '',
+            {
+                ...this.configService.get('COOKIE_OPTIONS'),
+                maxAge: 0,
+            },
+        )
         return null
     }
 
     async requestRefreshPassword(requestRefreshPasswordInput: RequestRefreshPasswordInput) {
-        const refreshPasswordToken = nanoid(32)
-        const user = await this.userModel.findOneAndUpdate(requestRefreshPasswordInput, { refreshPasswordToken })
+        const user = await this.userModel.findOne(requestRefreshPasswordInput)
 
         if (!user) {
             throw new NotFoundException()
         }
 
-        console.log('Send email here!')
+        const refreshPasswordToken = nanoid(32)
+
+        await user.update({ refreshPasswordToken })
+
+        await this.mailerService.sendMail({
+            to: user.email,
+            subject: 'Confirm reset password',
+            text: refreshPasswordToken,
+            html: refreshPasswordToken,
+        })
 
         return null
     }
 
-    confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput) {
-        console.log(confirmRefreshPasswordInput)
-        return
+    async confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput) {
+        const user = await this.userModel.findOne(confirmRefreshPasswordInput)
+
+        if (!user) {
+            throw new NotFoundException()
+        }
+
+        const password = nanoid(32)
+
+        user.password = password
+        await user.save()
+
+        await this.mailerService.sendMail({
+            to: user.email,
+            subject: 'Your new password',
+            text: password,
+            html: password,
+        })
+
+        return null
     }
 
     // findAll() {
