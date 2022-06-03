@@ -34,23 +34,22 @@ const useLogin = () => {
     })
 
     useEffect(() => {
-        errorResponse?.graphQLErrors?.[0]?.originalError?.extensions?.exception?.response?.error
-            && error(errorResponse?.graphQLErrors?.[0]?.originalError?.extensions?.exception?.response?.error)
-    }, [errorResponse])
+        const err = (errorResponse as any)?.graphQLErrors?.[0]?.originalError?.extensions?.exception?.response?.error
+        err && error(err)
+    }, [error, errorResponse])
 
     useEffect(() => {
         (async () => {
             if (data?.login) {
-                console.log(data.login.token)
                 await dispatchToken(data.login.token)
                 router.push(`/${(await readToken(data.login.token)).login}/nutrition-diary/${getShortDate()}`)
             }
         })()
-    }, [data])
+    }, [data, dispatchToken, router])
 
     useEffect(() => {
         !isEmpty(variables) && login()
-    }, [variables])
+    }, [login, variables])
 
     return {
         login: (loginUserInput: CreateSessionSchemaProps) => setVariables({ loginUserInput }),
