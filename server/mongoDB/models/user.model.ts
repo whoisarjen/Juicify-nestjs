@@ -101,10 +101,6 @@ const userSchema = new mongoose.Schema({
         default: 1,
         immutable: true
     },
-    public_profile: {
-        type: Number,
-        default: 1
-    },
     height: {
         type: Number,
         required: true
