@@ -32,7 +32,7 @@ const LogoWrapper = styled.div`
     display: grid;
 `
 
-const BaseRegister = ({ registerUser, t, loading, register, errors, handleSubmit, date, setDate, setValue }: useRegisterProps) => {
+const BaseRegister = ({ registerUser, t, fetching, register, errors, handleSubmit, date, setDate, setValue }: useRegisterProps) => {
     return (
         <Form onSubmit={handleSubmit(registerUser)}>
             <LogoWrapper>
@@ -117,7 +117,7 @@ const BaseRegister = ({ registerUser, t, loading, register, errors, handleSubmit
                     />
                 </DialogRules>
                 <LoadingButton
-                    loading={loading}
+                    loading={fetching}
                     variant="contained"
                     type="submit"
                     onClick={handleSubmit(registerUser)}

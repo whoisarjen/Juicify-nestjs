@@ -11,13 +11,13 @@ import { ConfirmRefreshPasswordInput } from './dto/confirm-refresh-password.inpu
 @Resolver(() => User)
 export class UsersResolver {
     constructor(private readonly usersService: UsersService) {}
-
-    @Mutation(() => User)
+    
+    @Mutation(() => User, { nullable: true })
     createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
         return this.usersService.create(createUserInput);
     }
 
-    @Mutation(() => User)
+    @Mutation(() => User, { nullable: true })
     confirmUser(@Args('confirmUserInput') confirmUserInput: ConfirmUserInput) {
         return this.usersService.confirm(confirmUserInput);
     }

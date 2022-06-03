@@ -1,47 +1,65 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import useTranslation from "next-translate/useTranslation";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CreateSessionSchemaProps, CreateSessionSchema } from "../../../schema/session.schema";
-import { readToken } from "../../../utils/auth.utils";
-import { getShortDate } from "../../../utils/date.utils";
-import { createIndexedDB, addIndexedDB } from "../../../utils/indexedDB.utils";
-import useAxios from "../../../hooks/useAxios";
 import useToken from "../../../hooks/useToken";
+import useCommon from "../../../hooks/useCommon";
+import { useQuery } from "urql";
+import { useNotify } from "../../../hooks/useNotify";
+import { isEmpty } from "lodash";
+import { getShortDate } from "../../../utils/date.utils";
+import { readToken } from "../../../utils/auth.utils";
+
+const LOGIN = `
+    query login ($loginUserInput: LoginUserInput!) {
+        login (loginUserInput: $loginUserInput) {
+            token
+        }
+    }
+`
 
 const useLogin = () => {
+    const { error } = useNotify()
+    const { t, router } = useCommon()
     const { dispatchToken } = useToken()
-    const { post } = useAxios()
-    const router = useRouter();
-    const { t } = useTranslation()
-    const [loading, setLoading] = useState(false)
+    const [variables, setVariables] = useState({})
+    const [{ data, fetching, error: errorResponse }, login] = useQuery({
+        query: LOGIN,
+        pause: true,
+        variables,
+    });
 
     const { register, formState: { errors }, handleSubmit } = useForm<CreateSessionSchemaProps>({
         resolver: zodResolver(CreateSessionSchema)
     })
 
-    const login = async (object: CreateSessionSchemaProps) => {
-        try {
-            setLoading(true);
-            const response = await post({ url: '/auth/login', object })
-            await createIndexedDB()
-            const keys = Object.keys(response.data)
-            for (let i = 0; i < keys.length; i++) {
-                if (keys[i] != 'token' && keys[i] != 'refresh_token') {
-                    await addIndexedDB(keys[i], response.data[keys[i]])
-                }
-            }
-            await dispatchToken(response.data.token)
-            router.push(`/${(await readToken(response.data.token)).login}/nutrition-diary/${getShortDate()}`);
-        } catch (e: any) {
-            console.log(e.message)
-        } finally {
-            setLoading(false);
-        }
-    }
+    useEffect(() => {
+        errorResponse?.graphQLErrors?.[0]?.originalError?.extensions?.exception?.response?.error
+            && error(errorResponse?.graphQLErrors?.[0]?.originalError?.extensions?.exception?.response?.error)
+    }, [errorResponse])
 
-    return { login, register, errors, handleSubmit, loading, t }
+    useEffect(() => {
+        (async () => {
+            if (data?.login) {
+                console.log(data.login.token)
+                await dispatchToken(data.login.token)
+                router.push(`/${(await readToken(data.login.token)).login}/nutrition-diary/${getShortDate()}`)
+            }
+        })()
+    }, [data])
+
+    useEffect(() => {
+        !isEmpty(variables) && login()
+    }, [variables])
+
+    return {
+        login: (loginUserInput: CreateSessionSchemaProps) => setVariables({ loginUserInput }),
+        register,
+        errors,
+        handleSubmit,
+        fetching,
+        t
+    }
 }
 
 export type useLoginProps = ReturnType<typeof useLogin>

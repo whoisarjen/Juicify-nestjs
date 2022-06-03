@@ -7,8 +7,8 @@ import { ConfirmUserInput } from './dto/confirm-user.input';
 import { CreateUserInput } from './dto/create-user.input';
 import { LoginUserInput } from './dto/login-user.input';
 import { User, UserDocument } from './entities/user.entity';
-import { omit, pick } from 'lodash';
-import { signJwt } from 'src/utils/jwt.utils';
+import { omit, pick, get } from 'lodash';
+import { decode, signJwt } from 'src/utils/jwt.utils';
 import { ConfigService } from '@nestjs/config';
 import { USER_OMITTED_PROPERTIES } from 'src/utils/user.utils'
 import { RequestRefreshPasswordInput } from './dto/request-refresh-password.input';
@@ -26,10 +26,34 @@ export class UsersService {
     async create(createUserInput: CreateUserInput) {
         const confirmationToken = nanoid(32)
 
-        return this.userModel.create({
+        const user = await this.userModel.findOne({
+            $or: [
+                {
+                    login: {
+                        $regex: createUserInput.login,
+                        $options: 'im',
+                    }
+                },
+                {
+                    email: {
+                        $regex: createUserInput.email,
+                        $options: 'im',
+                    }
+                }
+            ]
+        })
+
+        if (user) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: 'Login or email already in used!',
+            }, HttpStatus.FORBIDDEN);
+        }
+
+        return await this.userModel.create({
             ...createUserInput,
             confirmationToken,
-        });
+        })
     }
 
     async confirm(confirmUserInput: ConfirmUserInput) {
@@ -45,7 +69,15 @@ export class UsersService {
     async login({ login, password }: LoginUserInput, context: Ctx, isRefresh?: boolean) {
         const user = await this.userModel.findOne({ login })
 
-        if (!user || (!(await user.comparePassword(password)) && !isRefresh)) {
+        const current_refresh_token = get(context.req, `cookies.${this.configService.get('REFRESH_TOKEN_NAME')}`)
+        const session_time = current_refresh_token ? get(await decode(current_refresh_token), ['session_time']) : null
+
+        if (
+            !user ||
+            (!(await user.comparePassword(password)) && !isRefresh) ||
+            (session_time && session_time < user.killTokenOlderThan)
+        ) {
+            await this.logout(context)
             throw new NotFoundException()
         }
 
@@ -84,6 +116,8 @@ export class UsersService {
             refresh_token,
             this.configService.get('COOKIE_OPTIONS'),
         )
+
+        user.token = token
 
         return user
     }

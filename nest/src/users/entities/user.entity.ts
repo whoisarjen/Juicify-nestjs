@@ -2,6 +2,7 @@ import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { Transform } from 'class-transformer';
 
 export type UserDocument = User & Document;
 
@@ -14,7 +15,6 @@ export class User {
     @Prop({ required: true })
     confirmationToken: string
 
-    // email_confirmation PREV
     @Prop({ required: true, default: false })
     isConfirmed: boolean
 
@@ -32,7 +32,9 @@ export class User {
     @Prop({ required: true })
     password: string
 
-    // password_remind_hash PREV
+    @Prop({ required: true, default: Date.now })
+    killTokenOlderThan: Date
+
     @Prop()
     refreshPasswordToken?: string
 
@@ -88,6 +90,7 @@ export class User {
     @Field(() => String, { description: 'Description' })
     description?: string
 
+    @Transform(date => new Date(date as unknown as string).toDateString())
     @Prop({ required: true })
     @Field(() => Date, { description: 'Birth date' })
     birth: Date
@@ -105,11 +108,6 @@ export class User {
     @Field(() => Boolean, { description: 'Is user while dieting' })
     isCoachAnalyze: boolean
 
-    // avatar
-    @Prop({ required: true, default: false })
-    @Field(() => Boolean, { description: `Is user's avatar available` })
-    isAvatar: boolean
-
     // water_adder
     @Prop({ required: true, default: true })
     @Field(() => Boolean, { description: 'Is water adder available' })
@@ -126,7 +124,7 @@ export class User {
     isSportActive: boolean
 
     // kind_of_diet
-    // Can be new class basiclly
+    // Can be new class basiclly or enum
     @Prop({ required: true, default: 0 })
     @Field(() => Int, { description: 'What kind of diet user prefer' })
     kindOfDiet: number
@@ -148,6 +146,9 @@ export class User {
     @Prop({ required: true, default: [] })
     @Field(() => [Macronutrients], { description: 'Macronutrients' })
     macronutrients: [Macronutrients]
+
+    @Field(() => String, { description: 'Placeholder allowing to query for token, while login' })
+    token?: string
 
     comparePassword: (candidatePassword: string) => Promise<boolean>
 }

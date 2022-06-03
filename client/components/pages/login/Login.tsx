@@ -22,7 +22,7 @@ const LogoWrapper = styled.div`
     max-width: 180px;
 `
 
-const BaseLogin = ({ login, register, errors, handleSubmit, loading, t }: useLoginProps) => {
+const BaseLogin = ({ login, register, errors, handleSubmit, fetching, t }: useLoginProps) => {
     return (
         <Form onSubmit={handleSubmit(login)}>
             <LogoWrapper>
@@ -46,7 +46,7 @@ const BaseLogin = ({ login, register, errors, handleSubmit, loading, t }: useLog
                     helperText={errors.password?.message && t(`notify:${errors.password.message || ''}`)}
                 />
                 <LoadingButton
-                    loading={loading}
+                    loading={fetching}
                     variant="contained"
                     type="submit"
                     data-testid="login_button"

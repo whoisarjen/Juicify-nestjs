@@ -63,9 +63,6 @@ type User {
   """Is user while dieting"""
   isCoachAnalyze: Boolean!
 
-  """Is user's avatar available"""
-  isAvatar: Boolean!
-
   """Is water adder available"""
   isWaterAdder: Boolean!
 
@@ -89,6 +86,9 @@ type User {
 
   """Macronutrients"""
   macronutrients: [Macronutrients!]!
+
+  """Placeholder allowing to query for token, while login"""
+  token: String!
 }
 
 """
@@ -164,8 +164,8 @@ input ConfirmRefreshPasswordInput {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
-  confirmUser(confirmUserInput: ConfirmUserInput!): User!
+  createUser(createUserInput: CreateUserInput!): User
+  confirmUser(confirmUserInput: ConfirmUserInput!): User
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(_id: String!): Product!
@@ -186,6 +186,9 @@ input CreateUserInput {
 
   """Height"""
   height: Int!
+
+  """Birth date"""
+  birth: DateTime!
 }
 
 input ConfirmUserInput {
