@@ -11,12 +11,18 @@ async function bootstrap() {
 
     app.enableCors(configService.get('CORS'));
     app.use(cookieParser());
+
     app.useGlobalPipes(
         new ValidationPipe({
             transform: true,
         }),
     );
-    app.useGlobalGuards(new AuthGuard(app.get( Reflector )));
+
+    app.useGlobalGuards(
+        new AuthGuard(
+            app.get( Reflector )
+        )
+    );
 
     await app.listen(configService.get('PORT'));
 }

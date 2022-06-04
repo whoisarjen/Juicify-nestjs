@@ -5,7 +5,7 @@ import { CreateDailyInput } from './dto/create-daily.input';
 import { UpdateDailyInput } from './dto/update-daily.input';
 import { FindOneDailyInput } from './dto/find-one-daily.input';
 import { Ctx } from 'src/types/context.type';
-import { Public } from 'src/guards/auth.guard';
+import { Public } from 'src/decorators/public.decorator';
 
 @Resolver(() => Daily)
 export class DailiesResolver {
