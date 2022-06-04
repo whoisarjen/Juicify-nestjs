@@ -158,7 +158,7 @@ type Query {
   products: [Product!]!
   product(_id: String!): Product!
   dailies: [Daily!]
-  daily(findOneDailyInput: FindOneDailyInput!): Daily
+  daily(findOneDailyInput: FindOneDailyInput!): Daily!
 }
 
 input LoginUserInput {

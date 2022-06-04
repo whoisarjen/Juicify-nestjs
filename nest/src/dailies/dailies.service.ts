@@ -46,10 +46,16 @@ export class DailiesService {
             throw new NotFoundException()
         }
 
-        return await this.dailyModel.findOne({
+        const daily = await this.dailyModel.findOne({
             whenAdded,
             user: user._id,
         }).populate('user');
+
+        if (!daily) {
+            throw new NotFoundException()
+        }
+
+        return daily
     }
 
     update(_id: mongoose.Schema.Types.ObjectId, updateDailyInput: UpdateDailyInput) {

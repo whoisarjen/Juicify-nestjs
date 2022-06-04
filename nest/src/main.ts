@@ -1,8 +1,9 @@
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
+import { AuthGuard } from './guards/auth.guard';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -15,6 +16,7 @@ async function bootstrap() {
             transform: true,
         }),
     );
+    app.useGlobalGuards(new AuthGuard(app.get( Reflector )));
 
     await app.listen(configService.get('PORT'));
 }
