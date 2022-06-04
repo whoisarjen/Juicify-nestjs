@@ -16,7 +16,7 @@ type User {
   sex: Boolean!
 
   """Number of meals of user"""
-  meal_number: Int!
+  numberOfMeals: Int!
 
   """Is user an Admin"""
   isAdmin: Boolean!

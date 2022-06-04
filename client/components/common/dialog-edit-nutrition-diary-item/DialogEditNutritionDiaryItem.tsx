@@ -32,7 +32,7 @@ const BaseDialogEditNutritionDiaryItem = ({ product, children, isDialog, setIsDi
                             {...register('meal')}
                         >
                             {
-                                Array.from(Array(token.meal_number).keys()).map((x) =>
+                                Array.from(Array(token.numberOfMeals).keys()).map((x) =>
                                     <MenuItem key={x} value={x}>{t('Meal')} {x + 1}</MenuItem>
                                 )
                             }

@@ -11,7 +11,7 @@ const DAILY = `
             user {
                 _id
                 login
-                meal_number
+                numberOfMeals
                 macronutrients{
                     proteins
                     carbs
@@ -22,7 +22,7 @@ const DAILY = `
     }
 `
 
-const useDailyMeasurement = (when: string, login: string) => {
+export const useDailyMeasurement = (when: string, login: string) => {
     const { token, router } = useCommon()
 
     const [result, reexecuteQuery] = useQuery({
@@ -56,5 +56,3 @@ const useDailyMeasurement = (when: string, login: string) => {
         user,
     };
 };
-
-export { useDailyMeasurement };

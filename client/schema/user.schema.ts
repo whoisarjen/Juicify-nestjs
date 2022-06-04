@@ -1,7 +1,7 @@
 import { array, boolean, date, number, object, preprocess, string, TypeOf } from 'zod'
 
 export const SettingsSchema = object({
-    meal_number: preprocess((val) => Number(val), number().min(1).max(10)).optional(),
+    numberOfMeals: preprocess((val) => Number(val), number().min(1).max(10)).optional(),
     fiber: preprocess((val) => Number(val), number().min(0).max(100)).optional(),
     sugar_percent: preprocess((val) => Number(val), number().min(0).max(100)).optional(),
     name: string().max(50).optional(),

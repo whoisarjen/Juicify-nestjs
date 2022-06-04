@@ -45,7 +45,7 @@ export class User {
 
     @Prop({ required: true, default: 5 })
     @Field(() => Int, { description: 'Number of meals of user' })
-    meal_number: number
+    numberOfMeals: number
 
     @Prop({ required: true, immutable: true, default: false })
     @Field(() => Boolean, { description: 'Is user an Admin' })

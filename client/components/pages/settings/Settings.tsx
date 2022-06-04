@@ -29,9 +29,9 @@ const BaseSettings = ({ changeSettings, isDirty, errors, register, handleSubmit,
                 variant="outlined"
                 label={t('Number of meals')}
                 type="number"
-                {...register('meal_number')}
-                error={typeof errors.meal_number === 'undefined' ? false : true}
-                helperText={errors.meal_number?.message && t(`notify:${errors.meal_number.message || ''}`)}
+                {...register('numberOfMeals')}
+                error={typeof errors.numberOfMeals === 'undefined' ? false : true}
+                helperText={errors.numberOfMeals?.message && t(`notify:${errors.numberOfMeals.message || ''}`)}
             />
             <TextField
                 label={t("Fiber")}

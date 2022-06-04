@@ -13,7 +13,7 @@ const useNutritionDiary = () => {
     useEffect(() => {
         if (data?.nutrition_diary) {
             const arr: any = []
-            const l = user?.meal_number || 5
+            const l = user?.numberOfMeals || 5
             for (let i = 0; i < l; i++) {
                 arr.push([])
             }

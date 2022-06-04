@@ -16,7 +16,7 @@ export interface UserProps extends mongoose.Document {
     password?: string,
     password_remind_hash?: string,
     sex?: boolean,
-    meal_number?: number,
+    numberOfMeals?: number,
     users_roles_ID?: number,
     public_profile?: number,
     height?: number,
@@ -92,7 +92,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    meal_number: {
+    numberOfMeals: {
         type: Number,
         default: 5
     },

@@ -33,7 +33,7 @@ export const getUser = async () => {
             { proteins: 136, carbs: 502, fats: 73 },
             { proteins: 136, carbs: 925, fats: 73 },
         ],
-        meal_number: 5,
+        numberOfMeals: 5,
         name: "Kamil",
         password_remind_hash: "h5ZN7lmZUuCSUCSPIk6VVKdoenXg1Z",
         proteins: 25,

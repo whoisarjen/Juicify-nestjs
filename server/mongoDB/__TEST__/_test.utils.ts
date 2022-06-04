@@ -2,7 +2,7 @@ export const userPayload = {
     "premium": "2022-01-19T20:46:31.766Z",
     "_id": "60ba774fe0ecd72587eeaa29",
     "email_confirmation": true,
-    "meal_number": 5,
+    "numberOfMeals": 5,
     "users_roles_ID": 9999,
     "public_profile": 1,
     "goal": 0,

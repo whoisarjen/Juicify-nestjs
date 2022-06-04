@@ -56,7 +56,7 @@ const BaseDialogAddProducts = ({ children, isDialog, setIsDialog, t, dailyMeasur
                         onChange={(e) => setMeal(parseInt(e.target.value.toString()))}
                     >
                         {
-                            [...Array(token.meal_number)].map((x, i) =>
+                            [...Array(token.numberOfMeals)].map((x, i) =>
                                 <MenuItem key={i} value={i}>{t('Meal')} {i + 1}</MenuItem>
                             )
                         }
