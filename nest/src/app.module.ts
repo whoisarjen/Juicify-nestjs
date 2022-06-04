@@ -8,6 +8,7 @@ import { GraphQLModuleUtils } from './utils/graphQLModule.utils';
 import { UsersModule } from './users/users.module';
 import { MongooseModuleUtils } from './utils/mongooseModule.utils';
 import { MailerModuleUtils } from './utils/mailerModule.utils';
+import { DailiesModule } from './dailies/dailies.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { MailerModuleUtils } from './utils/mailerModule.utils';
         MongooseModuleUtils,
         UsersModule,
         ProductsModule,
+        DailiesModule,
     ],
     controllers: [AppController],
     providers: [AppService],

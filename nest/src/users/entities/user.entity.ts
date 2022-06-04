@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { Transform } from 'class-transformer';
+import * as moment from 'moment';
 
 export type UserDocument = User & Document;
 
@@ -90,9 +91,9 @@ export class User {
     @Field(() => String, { description: 'Description' })
     description?: string
 
-    @Transform(date => new Date(date as unknown as string).toDateString())
     @Prop({ required: true })
     @Field(() => Date, { description: 'Birth date' })
+    @Transform(({ value }) => moment(value).format('YYYY-MM-DD'))
     birth: Date
 
     @Prop({ required: true, default: 0 })
@@ -147,7 +148,7 @@ export class User {
     @Field(() => [Macronutrients], { description: 'Macronutrients' })
     macronutrients: [Macronutrients]
 
-    @Field(() => String, { description: 'Placeholder allowing to query for token, while login' })
+    @Field(() => String, { nullable: true, description: 'Placeholder allowing to query for token, while login' })
     token?: string
 
     comparePassword: (candidatePassword: string) => Promise<boolean>

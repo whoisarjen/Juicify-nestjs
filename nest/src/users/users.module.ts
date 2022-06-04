@@ -11,6 +11,6 @@ import { MailerModule } from 'src/mailer/mailer.module';
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])
     ],
     providers: [UsersResolver, UsersService],
-    exports: [UsersService],
+    exports: [UsersService, UsersModule],
 })
 export class UsersModule {}

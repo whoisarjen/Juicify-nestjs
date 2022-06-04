@@ -23,6 +23,6 @@ export class CreateUserInput {
     height: number
 
     @Field(() => Date, { description: 'Birth date' })
-    @Transform(({ value }) => moment(value))
+    @Transform(({ value }) => moment(value).format('YYYY-MM-DD'))
     birth: Moment;
 }

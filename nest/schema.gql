@@ -88,7 +88,7 @@ type User {
   macronutrients: [Macronutrients!]!
 
   """Placeholder allowing to query for token, while login"""
-  token: String!
+  token: String
 }
 
 """
@@ -108,7 +108,7 @@ type Macronutrients {
 }
 
 type Product {
-  """_id of product"""
+  """_id"""
   _id: String!
 
   """Created by"""
@@ -133,6 +133,23 @@ type Product {
   updatedAt: DateTime
 }
 
+type Daily {
+  """_id"""
+  _id: String!
+
+  """Daily for date"""
+  whenAdded: DateTime!
+
+  """Created by"""
+  user: User!
+
+  """Created at"""
+  createdAt: DateTime
+
+  """Last updated at"""
+  updatedAt: DateTime
+}
+
 type Query {
   login(loginUserInput: LoginUserInput!): User
   logout: User
@@ -140,6 +157,8 @@ type Query {
   confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput!): User
   products: [Product!]!
   product(_id: String!): Product!
+  dailies: [Daily!]
+  daily(findOneDailyInput: FindOneDailyInput!): Daily
 }
 
 input LoginUserInput {
@@ -163,12 +182,22 @@ input ConfirmRefreshPasswordInput {
   refreshPasswordToken: String!
 }
 
+input FindOneDailyInput {
+  """Login"""
+  login: String!
+
+  """Day od daily"""
+  whenAdded: String!
+}
+
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User
   confirmUser(confirmUserInput: ConfirmUserInput!): User
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(_id: String!): Product!
+  createDaily(createDailyInput: CreateDailyInput!): Daily!
+  updateDaily(updateDailyInput: UpdateDailyInput!): Daily!
 }
 
 input CreateUserInput {
@@ -225,6 +254,16 @@ input UpdateProductInput {
 
   """Number of grams per 100g/ml"""
   f: Float
+  _id: String!
+}
+
+input CreateDailyInput {
+  """Daily for date"""
+  whenAdded: DateTime!
+}
+
+input UpdateDailyInput {
+  """_id"""
   _id: String!
 }
 

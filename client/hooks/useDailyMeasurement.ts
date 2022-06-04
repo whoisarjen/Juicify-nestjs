@@ -52,7 +52,7 @@ const useDailyMeasurement = (when: string, login: string): useDailyMeasurementRe
                 }
             })();
         }
-    }, [when, login, reload, router.query, reloadKey]);
+    }, [when, login, reload, router.query, reloadKey, token, theOldestSupportedDate, loadValueByLogin]);
 
     return { data, user, reload: () => setReload(reload + 1) };
 };
