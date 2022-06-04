@@ -35,7 +35,7 @@ const Grid = styled.div`
     }
 `
 
-const BaseDialogAddProducts = ({ children, isDialog, setIsDialog, t, dailyMeasurement, meal, setMeal, open, setOpen, find, setFind, setTab, loading, searchCache, token, items, addProductsToDiary, setRefreshChecked, loadedProduct, setLoadedProduct, checked, created, refreshChecked }: useDialogAddProductsProps) => {
+const BaseDialogAddProducts = ({ children, isDialog, setIsDialog, t, dailyMeasurement, meal, setMeal, open, setOpen, find, setFind, setTab, fetching, token, products, addProductsToDiary, setRefreshChecked, loadedProduct, setLoadedProduct, checked, created, refreshChecked }: useDialogAddProductsProps) => {
     return (
         <>
             <div onClick={() => setIsDialog(true)}>{children}</div>
@@ -69,8 +69,8 @@ const BaseDialogAddProducts = ({ children, isDialog, setIsDialog, t, dailyMeasur
                         onClose={() => setOpen(false)}
                         isOptionEqualToValue={(option, value) => option === value}
                         getOptionLabel={option => option ? option : ''}
-                        options={searchCache}
-                        loading={loading}
+                        options={[]}
+                        loading={fetching}
                         onInputChange={(e, value) => setFind(value.trim().toLowerCase())}
                         renderInput={(params) => (
                             <TextField
@@ -80,7 +80,7 @@ const BaseDialogAddProducts = ({ children, isDialog, setIsDialog, t, dailyMeasur
                                     ...params.InputProps,
                                     endAdornment: (
                                         <Fragment>
-                                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                            {fetching ? <CircularProgress color="inherit" size={20} /> : null}
                                             {params.InputProps.endAdornment}
                                         </Fragment>
                                     ),
@@ -90,7 +90,7 @@ const BaseDialogAddProducts = ({ children, isDialog, setIsDialog, t, dailyMeasur
                     />
                     <AddItemsTabs changeTab={(value) => setTab(value)} checkedLength={checked.length} />
                     {
-                        items?.length > 0 && items.map((product: PRODUCT_SCHEMA_PROPS) =>
+                        products?.length > 0 && products.map((product: PRODUCT_SCHEMA_PROPS) =>
                             <AddProductsBox refreshCheckedProducts={() => setRefreshChecked(refreshChecked + 1)} product={product} key={product._id} openMoreInformation={() => setLoadedProduct(product)} />
                         )
                     }

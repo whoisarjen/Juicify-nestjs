@@ -1,26 +1,34 @@
-import useTranslation from "next-translate/useTranslation";
 import { useState, useEffect } from "react";
 import { DialogAddProductsProps } from ".";
-import useFind from "../../../hooks/useFind";
-import { useAppDispatch, useAppSelector } from "../../../hooks/useRedux";
+import useProducts from "../../../hooks/useProducts";
+import { useAppDispatch } from "../../../hooks/useRedux";
 import { refreshKey } from "../../../redux/features/key.slice";
 import { PRODUCT_SCHEMA_PROPS } from "../../../schema/product.schema";
 import { insertThoseIDStoDBController } from "../../../utils/db.utils";
 import { deleteIndexedDB, getAllIndexedDB } from "../../../utils/indexedDB.utils";
+import useCommon from "../../../hooks/useCommon";
 
 const useDialogAddProducts = ({ children, index, dailyMeasurement }: DialogAddProductsProps) => {
     const [isDialog, setIsDialog] = useState(false)
     const [loadedProduct, setLoadedProduct] = useState<any>(false)
-    const { t } = useTranslation('nutrition-diary');
+    const { t, token} = useCommon()
     const [tab, setTab] = useState(0)
     const [open, setOpen] = useState(false)
     const [meal, setMeal] = useState(index)
     const [checked, setChecked] = useState([])
-    const token: any = useAppSelector(state => state.token.value)
     const [refreshChecked, setRefreshChecked] = useState(0)
     const [find, setFind] = useState<any>(null)
-    const { items, loading, searchCache } = useFind(find, 'product', tab)
+
+    const {
+        products,
+        fetching,
+        findProducts,
+    } = useProducts()
     const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        findProducts(find)
+    }, [find, findProducts])
 
     const created = async (productName: string) => {
         if (productName == find) {
@@ -49,14 +57,13 @@ const useDialogAddProducts = ({ children, index, dailyMeasurement }: DialogAddPr
     }
 
     useEffect(() => setMeal(index), [index])
-    useEffect(() => setOpen(false), [searchCache])
     useEffect(() => {
         (async () => {
             setChecked(await getAllIndexedDB('checked_product') || [])
         })()
     }, [refreshChecked])
 
-    return { children, isDialog, setIsDialog, t, index, dailyMeasurement, meal, setMeal, open, setOpen, find, setFind, setTab, loading, searchCache, token, items, addProductsToDiary, setRefreshChecked, loadedProduct, setLoadedProduct, checked, created, refreshChecked }
+    return { children, isDialog, setIsDialog, t, index, dailyMeasurement, meal, setMeal, open, setOpen, find, setFind, setTab, fetching, token, products, addProductsToDiary, setRefreshChecked, loadedProduct, setLoadedProduct, checked, created, refreshChecked }
 }
 
 export type useDialogAddProductsProps = ReturnType<typeof useDialogAddProducts>

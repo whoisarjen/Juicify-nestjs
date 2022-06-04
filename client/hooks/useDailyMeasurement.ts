@@ -3,7 +3,7 @@ import { useQuery } from "urql";
 import useCommon from "./useCommon";
 import { useEffect, useMemo } from "react";
 
-const DAILY = `
+const DAILY_QUERY = `
     query daily ($findOneDailyInput: FindOneDailyInput!) {
         daily (findOneDailyInput: $findOneDailyInput) {
             _id
@@ -26,7 +26,7 @@ export const useDailyMeasurement = (when: string, login: string) => {
     const { token, router } = useCommon()
 
     const [{ data: response, fetching, error }, reexecuteQuery] = useQuery({
-        query: DAILY,
+        query: DAILY_QUERY,
         variables: {
             findOneDailyInput: {
                 login: login || router.query.login,

@@ -155,8 +155,7 @@ type Query {
   logout: User
   requestRefreshPassword(requestRefreshPasswordInput: RequestRefreshPasswordInput!): User
   confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput!): User
-  products: [Product!]!
-  product(_id: String!): Product!
+  products(findProductsInput: FindProductsInput!): [Product!]!
   dailies: [Daily!]
   daily(findOneDailyInput: FindOneDailyInput!): Daily!
 }
@@ -182,6 +181,11 @@ input ConfirmRefreshPasswordInput {
   refreshPasswordToken: String!
 }
 
+input FindProductsInput {
+  """Name of product"""
+  name: String!
+}
+
 input FindOneDailyInput {
   """Login"""
   login: String!
@@ -194,8 +198,6 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User
   confirmUser(confirmUserInput: ConfirmUserInput!): User
   createProduct(createProductInput: CreateProductInput!): Product!
-  updateProduct(updateProductInput: UpdateProductInput!): Product!
-  removeProduct(_id: String!): Product!
   createDaily(createDailyInput: CreateDailyInput!): Daily!
   updateDaily(updateDailyInput: UpdateDailyInput!): Daily!
 }
@@ -242,21 +244,6 @@ input CreateProductInput {
   f: Float
 }
 
-input UpdateProductInput {
-  """Name of product"""
-  name: String
-
-  """Number of grams per 100g/ml"""
-  p: Float
-
-  """Number of grams per 100g/ml"""
-  c: Float
-
-  """Number of grams per 100g/ml"""
-  f: Float
-  _id: String!
-}
-
 input CreateDailyInput {
   """Daily for date"""
   whenAdded: DateTime!
@@ -265,8 +252,4 @@ input CreateDailyInput {
 input UpdateDailyInput {
   """_id"""
   _id: String!
-}
-
-type Subscription {
-  productAdded: Product!
 }
