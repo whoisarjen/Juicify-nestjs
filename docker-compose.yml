@@ -14,3 +14,26 @@ services:
             - /app/.next
         ports:
             - "80:80"
+
+    backend:
+        container_name: backend
+        restart: always
+        build:
+            context: nest
+            dockerfile: Dockerfile
+        expose:
+            - "5000"
+        volumes:
+            - ./nest:/app
+            - /app/node_modules
+            - /app/dist
+        ports:
+            - "5000:5000"
+
+    redis:
+        container_name: redis
+        image: "redis:alpine"
+        expose:
+            - "6379"
+        ports:
+            - "6379:6379"
