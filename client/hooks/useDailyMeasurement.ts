@@ -35,16 +35,14 @@ export const useDailyMeasurement = (when: string, login: string) => {
         }
     })
 
-    const { data, user } = useMemo(() => {
-        return {
-            user: response?.daily?.user,
-            data: loadMissingDataForDailyMeasurement({
-                whenAdded: when,
-                user_ID: token._id,
-                object: response?.daily,
-            }),
-        }
-    }, [response?.daily, token._id, when])
+    const { data, user } = useMemo(() => ({
+        user: response?.daily?.user,
+        data: loadMissingDataForDailyMeasurement({
+            whenAdded: when,
+            user_ID: token._id,
+            object: response?.daily,
+        }),
+    }), [response?.daily, token._id, when])
 
     useEffect(() => {
         reexecuteQuery()
