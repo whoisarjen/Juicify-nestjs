@@ -144,7 +144,7 @@ export class User {
     @Field(() => Int, { description: '% of carbs as sugar' })
     carbsPercentAsSugar: number
 
-    @Prop({ required: true, default: [] })
+    @Prop({ required: true })
     @Field(() => [Macronutrients], { description: 'Macronutrients' })
     macronutrients: [Macronutrients]
 

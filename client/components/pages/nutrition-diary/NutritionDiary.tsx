@@ -11,7 +11,6 @@ import { PRODUCT_SCHEMA_PROPS } from "../../../schema/product.schema"
 import { ActivitySchemaProps } from "../../../schema/activity.schema"
 import Share from "../../common/button-share"
 import NavbarOnlyTitle from "../../common/navbar-only-title"
-import useProducts from "../../../hooks/useProducts"
 
 const Box = styled.div`
     width: 100%;
@@ -23,26 +22,8 @@ const Box = styled.div`
 `
 
 const BaseNutritionDiary = ({ router, token, nutritionDiary, user, data }: useNutritionDiaryProps) => {
-    const {
-        products,
-        createProduct,
-        removeProduct,
-        productsReexecuteQuery,
-    } = useProducts()
-
     return (
         <>
-            {
-                products?.map(({ _id, updatedAt }: any) => (
-                    <div onClick={() => removeProduct(_id)} key={_id}>{`${_id} => ${updatedAt}`}</div>
-                ))
-            }
-            <button onClick={() => productsReexecuteQuery()}>Load</button>
-            <button onClick={() => createProduct({
-                name: "elo",
-                p: 2.155,
-                c: 11,
-            })}>Create</button>
             <Box>
                 <NavbarOnlyTitle title="nutrition-diary:title" />
                 <Share />

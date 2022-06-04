@@ -16,27 +16,27 @@ const useDailyMeasurements = (today: Date | string, howManyDays: number = 7, log
     const reloadKey = useAppSelector(state => state.key.daily_measurement)
     const { loadValueByLogin } = useOtherUser()
 
-    useEffect(() => {
-        (async () => {
-            if (login) {
-                if (token.login == (login || token.login)) { // Sometimes need to use only in token's user case and this block errors
-                    let res = await getAllIndexedDB('daily_measurement')
-                    res = await loadMissingDays(res, token._id, howManyDays, today)
-                    setData(res)
-                    setUser(token)
-                } else {
-                    let res = await loadValueByLogin(
-                        "daily_measurements",
-                        addDaysToDate(today, -howManyDays),
-                        login.toString()
-                    );
-                    setUser(res.user)
-                    res = await loadMissingDays(res.data, res.user._id, howManyDays, today)
-                    setData(res)
-                }
-            }
-        })()
-    }, [reload, router.query, reloadKey])
+    // useEffect(() => {
+    //     (async () => {
+    //         if (login) {
+    //             if (token.login == (login || token.login)) { // Sometimes need to use only in token's user case and this block errors
+    //                 let res = await getAllIndexedDB('daily_measurement')
+    //                 res = await loadMissingDays(res, token._id, howManyDays, today)
+    //                 setData(res)
+    //                 setUser(token)
+    //             } else {
+    //                 let res = await loadValueByLogin(
+    //                     "daily_measurements",
+    //                     addDaysToDate(today, -howManyDays),
+    //                     login.toString()
+    //                 );
+    //                 setUser(res.user)
+    //                 res = await loadMissingDays(res.data, res.user._id, howManyDays, today)
+    //                 setData(res)
+    //             }
+    //         }
+    //     })()
+    // }, [reload, router.query, reloadKey])
 
     return { data, user, reload: () => setReload(reload + 1) }
 }

@@ -7,51 +7,61 @@ import { LoginUserInput } from './dto/login-user.input';
 import { Ctx } from 'src/types/context.type';
 import { RequestRefreshPasswordInput } from './dto/request-refresh-password.input';
 import { ConfirmRefreshPasswordInput } from './dto/confirm-refresh-password.input';
+import { Public } from 'src/decorators/public.decorator';
 
 @Resolver(() => User)
 export class UsersResolver {
     constructor(private readonly usersService: UsersService) {}
-    
+ 
+    @Public()
     @Mutation(() => User, { nullable: true })
     createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
         return this.usersService.create(createUserInput);
     }
 
+    @Public()
     @Mutation(() => User, { nullable: true })
     confirmUser(@Args('confirmUserInput') confirmUserInput: ConfirmUserInput) {
         return this.usersService.confirm(confirmUserInput);
     }
 
+    @Public()
     @Query(() => User, { nullable: true })
     login(@Args('loginUserInput') loginUserInput: LoginUserInput, @Context() context: Ctx) {
         return this.usersService.login(loginUserInput, context);
     }
 
+    @Public()
     @Query(() => User, { nullable: true })
     logout(@Context() context: Ctx) {
         return this.usersService.logout(context);
     }
 
+    @Public()
     @Query(() => User, { nullable: true })
     requestRefreshPassword(@Args('requestRefreshPasswordInput') requestRefreshPasswordInput: RequestRefreshPasswordInput) {
         return this.usersService.requestRefreshPassword(requestRefreshPasswordInput);
     }
 
+    @Public()
     @Query(() => User, { nullable: true })
     confirmRefreshPassword(@Args('confirmRefreshPasswordInput') confirmRefreshPasswordInput: ConfirmRefreshPasswordInput) {
         return this.usersService.confirmRefreshPassword(confirmRefreshPasswordInput);
     }
 
+    // @Public()
     // @Query(() => [User], { name: 'users' })
     // findAll() {
     //     return this.usersService.findAll();
     // }
 
+    // @Public()
     // @Query(() => User, { name: 'user' })
     // findOne(@Args('login', { type: () => String }) login: string) {
     //     return this.usersService.findOne(login);
     // }
 
+    // @Public()
     // @Mutation(() => User)
     // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     //     return this.usersService.update(updateUserInput.id, updateUserInput);

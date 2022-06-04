@@ -3,19 +3,19 @@ import { DailyMeasurementSchemaProps } from "../schema/dailyMeasurement.schema";
 import { addDaysToDate } from "./date.utils";
 import { is_id } from "./db.utils";
 import { deleteIndexedDB } from "./indexedDB.utils";
+import { v4 } from "uuid";
 
 interface loadMissingDataForDailyMeasurementProps {
-    _id: string,
     user_ID: string,
     whenAdded: string,
     object?: any
 }
 
-export const loadMissingDataForDailyMeasurement = ({ _id, user_ID, whenAdded, object = {} }: loadMissingDataForDailyMeasurementProps) => {
+export const loadMissingDataForDailyMeasurement = ({ user_ID, whenAdded, object = {} }: loadMissingDataForDailyMeasurementProps) => {
     return {
-        ...(object?._id ? { _id: object._id } : { _id }),
+        ...(object?._id ? { _id: object._id } : { _id: 'XD' + v4() }),
         ...(object?.weight ? { weight: object.weight } : { weight: 0 }),
-        ...(object?.user_ID ? { user_ID: object.user_ID } : { user_ID }),
+        ...(object?.user?._id ? { user_ID: object.user._id } : { user_ID }),
         ...(object?.whenAdded ? { whenAdded: object.whenAdded } : { whenAdded }),
         ...(object?.nutrition_diary ? { nutrition_diary: object.nutrition_diary } : { nutrition_diary: [] }),
         ...(object?.workout_result ? { workout_result: object.workout_result } : { workout_result: [] }),
