@@ -2,6 +2,13 @@ const withPWA = require("next-pwa");
 const nextTranslate = require("next-translate");
 
 module.exports = withPWA({
+    webpackDevMiddleware: config => {
+        config.watchOptions = {
+            poll: 1000,
+            aggregateTimeout: 300,
+        }
+        return config
+    },
     reactStrictMode: true,
     pwa: {
         dest: "public",
