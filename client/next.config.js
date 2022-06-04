@@ -9,5 +9,8 @@ module.exports = withPWA({
         skipWaiting: true,
         disable: process.env.NODE_ENV === 'development',
     },
+    experimental: {
+        outputStandalone: true,
+    },
     ...nextTranslate(),
 });
