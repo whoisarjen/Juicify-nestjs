@@ -12,7 +12,7 @@ const DAILY = `
                 _id
                 login
                 numberOfMeals
-                macronutrients{
+                macronutrients {
                     proteins
                     carbs
                     fats
@@ -25,9 +25,8 @@ const DAILY = `
 export const useDailyMeasurement = (when: string, login: string) => {
     const { token, router } = useCommon()
 
-    const [result, reexecuteQuery] = useQuery({
+    const [{ data: response, fetching, error }, reexecuteQuery] = useQuery({
         query: DAILY,
-        pause: true,
         variables: {
             findOneDailyInput: {
                 login: login || router.query.login,
@@ -38,21 +37,23 @@ export const useDailyMeasurement = (when: string, login: string) => {
 
     const { data, user } = useMemo(() => {
         return {
-            user: result?.data?.daily?.user,
+            user: response?.daily?.user,
             data: loadMissingDataForDailyMeasurement({
                 whenAdded: when,
                 user_ID: token._id,
-                object: result?.data?.daily,
+                object: response?.daily,
             }),
         }
-    }, [result?.data?.daily, token._id, when])
+    }, [response?.daily, token._id, when])
 
     useEffect(() => {
         reexecuteQuery()
-    }, [reexecuteQuery, router.query.login, router.query.whenAdded, when, login])
+    }, [reexecuteQuery, router.query.login, router.query.whenAdded])
 
     return {
         data,
         user,
+        error,
+        fetching,
     };
 };
