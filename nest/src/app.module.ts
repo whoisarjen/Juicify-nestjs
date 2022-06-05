@@ -9,6 +9,8 @@ import { UsersModule } from './users/users.module';
 import { MongooseModuleUtils } from './utils/mongooseModule.utils';
 import { MailerModuleUtils } from './utils/mailerModule.utils';
 import { DailiesModule } from './dailies/dailies.module';
+import * as Joi from 'joi';
+import { DatabaseUtils } from './utils/database.utils';
 
 @Module({
     imports: [
@@ -16,7 +18,16 @@ import { DailiesModule } from './dailies/dailies.module';
             cache: true,
             isGlobal: true,
             load: [config],
+            // validationSchema: Joi.object({
+            //     POSTGRES_HOST: Joi.string().required(),
+            //     POSTGRES_PORT: Joi.number().required(),
+            //     POSTGRES_USER: Joi.string().required(),
+            //     POSTGRES_PASSWORD: Joi.string().required(),
+            //     POSTGRES_DB: Joi.string().required(),
+            //     PORT: Joi.number(),
+            // }),
         }),
+        DatabaseUtils,
         MailerModuleUtils,
         GraphQLModuleUtils,
         MongooseModuleUtils,

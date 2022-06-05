@@ -1,7 +1,12 @@
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 
 export default () => ({
-    PORT: parseInt(process.env.PORT, 10) || 5000,
+    PORT: 5000,
+    POSTGRES_HOST: 'postgres',
+    POSTGRES_PORT: 5432,
+    POSTGRES_USER: 'admin',
+    POSTGRES_PASSWORD: 'admin',
+    POSTGRES_DB: 'juicify',
     MONGODB_STRING: process.env.MONGODB_STRING,
     CORS: {
         origin: 'http://localhost',
@@ -17,7 +22,7 @@ export default () => ({
     },
     SECRET_KEY: process.env.SECRET_KEY,
     COOKIE_OPTIONS: {
-        domain: process.env.DOMAIN || 'localhost', // <- Change to your client domain
+        domain: process.env.DOMAIN || 'localhost',
         secure: false, // <- Should be true if !development
         sameSite: 'strict',
         httpOnly: true,
@@ -42,7 +47,7 @@ export default () => ({
         preview: true,
         template: {
             dir: process.cwd() + '/template/',
-            adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+            adapter: new HandlebarsAdapter(),
             options: {
                 strict: true,
             },

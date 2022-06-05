@@ -2,9 +2,11 @@ import { ObjectType, Field, Float } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { User } from 'src/users/entities/user.entity';
+import { Entity } from 'typeorm';
 
 export type ProductDocument = Product & Document;
 
+@Entity()
 @Schema({ timestamps: true })
 @ObjectType()
 export class Product {
