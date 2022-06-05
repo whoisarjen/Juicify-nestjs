@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { Ctx } from 'src/types/context.type';
 import { get } from 'lodash'
-
+const fs = require('fs');
 @Injectable()
 export class ProductsService {
     constructor(
@@ -16,12 +16,12 @@ export class ProductsService {
 
     async create(createProductInput: CreateProductInput, context: Ctx) {
         const user = get(context.req.user, 'id')
-
+        
         const created = await this.productsRepository.create({
             ...createProductInput,
             user,
         })
-
+    
         await this.productsRepository.save(created);
 
         return await this.productsRepository.findOne({
@@ -32,6 +32,7 @@ export class ProductsService {
                 user: true,
             },
         });
+        return user
     }
 
     async findAll({ name }: FindProductsInput) {

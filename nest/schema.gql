@@ -109,6 +109,9 @@ type Product {
   """Number of grams per 100g/ml"""
   fats: Float
 
+  """Barcode"""
+  barcode: Int
+
   """Verified"""
   isVerified: Boolean
 
@@ -116,21 +119,24 @@ type Product {
   isDeleted: Boolean
 }
 
-type Daily {
+type Consumed {
   """id"""
-  id: String!
-
-  """Daily for date"""
-  whenAdded: DateTime!
+  id: ID!
 
   """Created by"""
   user: User!
 
-  """Created at"""
-  createdAt: DateTime
+  """Product"""
+  product: Product!
 
-  """Last updated at"""
-  updatedAt: DateTime
+  """How many times 100g of product"""
+  howMany: Float!
+
+  """Number of meat"""
+  meal: Int!
+
+  """Day of eatting"""
+  date: DateTime!
 }
 
 type Query {
@@ -139,8 +145,7 @@ type Query {
   requestRefreshPassword(requestRefreshPasswordInput: RequestRefreshPasswordInput!): User
   confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput!): User
   products(findProductsInput: FindProductsInput!): [Product!]!
-  dailies: [Daily!]
-  daily(findOneDailyInput: FindOneDailyInput!): Daily!
+  consumed(date: DateTime!): Consumed!
 }
 
 input LoginUserInput {
@@ -169,20 +174,13 @@ input FindProductsInput {
   name: String!
 }
 
-input FindOneDailyInput {
-  """Login"""
-  login: String!
-
-  """Day od daily"""
-  whenAdded: String!
-}
-
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User
   confirmUser(confirmUserInput: ConfirmUserInput!): User
   createProduct(createProductInput: CreateProductInput!): Product!
-  createDaily(createDailyInput: CreateDailyInput!): Daily!
-  updateDaily(updateDailyInput: UpdateDailyInput!): Daily!
+  createConsumed(createConsumedInput: CreateConsumedInput!): Consumed!
+  updateConsumed(updateConsumedInput: UpdateConsumedInput!): Consumed!
+  removeConsumed(id: Int!): Consumed!
 }
 
 input CreateUserInput {
@@ -227,12 +225,30 @@ input CreateProductInput {
   fats: Float
 }
 
-input CreateDailyInput {
-  """Daily for date"""
-  whenAdded: DateTime!
+input CreateConsumedInput {
+  """Created by"""
+  user: Int!
+
+  """Product"""
+  product: Int!
+
+  """How many times 100g of product"""
+  howMany: Float!
+
+  """Number of meat"""
+  meal: Int!
+
+  """Day of eatting"""
+  date: DateTime!
 }
 
-input UpdateDailyInput {
+input UpdateConsumedInput {
   """id"""
-  id: String!
+  id: ID!
+
+  """How many times 100g of product"""
+  howMany: Float!
+
+  """Number of meat"""
+  meal: Int!
 }

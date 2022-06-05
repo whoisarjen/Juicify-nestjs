@@ -10,6 +10,7 @@ import { MongooseModuleUtils } from './utils/mongooseModule.utils';
 import { MailerModuleUtils } from './utils/mailerModule.utils';
 import * as Joi from 'joi';
 import { PostgresUtils } from './utils/postgres.utils';
+import { ConsumedModule } from './consumed/consumed.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { PostgresUtils } from './utils/postgres.utils';
         MongooseModuleUtils,
         UsersModule,
         ProductsModule,
+        ConsumedModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -1,4 +1,4 @@
-import { ObjectType, Field, Float } from '@nestjs/graphql';
+import { ObjectType, Field, Float, Int } from '@nestjs/graphql';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -29,6 +29,10 @@ export class Product {
     @Column({ type: 'real', default: 0 })
     @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
     fats: number;
+
+    @Column({ type: 'int', default: null })
+    @Field(() => Int, { nullable: true, description: 'Barcode' })
+    barcode: number;
 
     // PREV "v"
     @Column({ type: 'bool', default: false })

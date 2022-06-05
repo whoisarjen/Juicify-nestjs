@@ -2,7 +2,7 @@ import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
 import { Transform } from 'class-transformer';
 import * as moment from 'moment';
-import { BeforeInsert, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -17,11 +17,11 @@ export class User {
     @Column({ type: 'bool', default: false })
     isConfirmed: boolean
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ length: 255 })
     email: string
 
     @Index({ unique: true })
-    @Column({ type: 'varchar', length: 60 })
+    @Column({ length: 60 })
     @Field(() => String, { description: 'Login' })
     login: string
 
@@ -142,6 +142,10 @@ export class User {
     // @Column()
     // @Field(() => [Macronutrients], { description: 'Macronutrients' })
     // macronutrients: [Macronutrients]
+
+	@CreateDateColumn() createdAt: Date
+
+	@UpdateDateColumn() updatedAt: Date
 
     @Field(() => String, { nullable: true, description: 'Placeholder allowing to query for token, while login' })
     token?: string
