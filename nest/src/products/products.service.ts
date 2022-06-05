@@ -1,46 +1,77 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductInput } from './dto/create-product.input';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { Product, ProductDocument } from './entities/product.entity';
+import { Product } from './entities/product.entity';
 import { FindProductsInput } from './dto/find-products.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Like, Repository } from 'typeorm';
+import { Ctx } from 'src/types/context.type';
+import { get } from 'lodash'
 
 @Injectable()
 export class ProductsService {
     constructor(
-        @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+        @InjectRepository(Product)
+        private productsRepository: Repository<Product>
     ) { }
 
-    async create(createProductInput: CreateProductInput) {
-        return await this.productModel.create(createProductInput);
+    async create(createProductInput: CreateProductInput, context: Ctx) {
+        const user = get(context.req.user, 'id')
+
+        const created = await this.productsRepository.create({
+            ...createProductInput,
+            user,
+        })
+
+        await this.productsRepository.save(created);
+
+        return await this.productsRepository.findOne({
+            where: {
+                id: created.id
+            },
+            relations: {
+                user: true,
+            },
+        });
     }
 
     async findAll({ name }: FindProductsInput) {
-        return await this.productModel.find({
-            $and:
-                [
-                    { user_ID: { $exists: false } },
-                    { deleted: { $exists: false } },
-                    name.split(" ").length > 1
-                        ? {
-                            name: {
-                                $regex: name,
-                                $options: 'im'
-                            }
-                        }
-                        : {
-                            $text: {
-                                $search: name.split(" ").map((str: any) => "\"" + str + "\"").join(' ')
-                            }
-                        }
-                ]
+        const products = await this.productsRepository.find({
+            where: {
+                name: Like(`%${name}%`),
+            },
+            order: {
+                name: "ASC",
+                isVerified: "DESC",
+            },
+            take: 10,
         })
-            .sort({ l: 1, v: -1 })
-            .limit(10)
+
+        return products;
+        // return await this.productModel.find({
+        //     $and:
+        //         [
+        //             { userid: { $exists: false } },
+        //             { deleted: { $exists: false } },
+        //             name.split(" ").length > 1
+        //                 ? {
+        //                     name: {
+        //                         $regex: name,
+        //                         $options: 'im'
+        //                     }
+        //                 }
+        //                 : {
+        //                     $text: {
+        //                         $search: name.split(" ").map((str: any) => "\"" + str + "\"").join(' ')
+        //                     }
+        //                 }
+        //         ]
+        // })
+        //     .sort({ l: 1, v: -1 })
+        //     .limit(10)
     }
 
-    // async remove(_id: string) {
-    //     await this.productModel.deleteOne({ _id });
-    //     return { _id };
+    // async remove(id: string) {
+    //     await this.productModel.deleteOne({ id });
+    //     return { id };
     // }
 }

@@ -1,45 +1,50 @@
 import { ObjectType, Field, Float } from '@nestjs/graphql';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
 import { User } from 'src/users/entities/user.entity';
-import { Entity } from 'typeorm';
-
-export type ProductDocument = Product & Document;
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-@Schema({ timestamps: true })
 @ObjectType()
 export class Product {
-    @Field(() => String, { description: '_id' })
-    _id: mongoose.Schema.Types.ObjectId;
+    @PrimaryGeneratedColumn()
+    @Field(() => String, { description: 'id' })
+    id: number;
 
-    @Prop({ nullable: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+    @ManyToOne(() => User)
+    @JoinColumn({ referencedColumnName: 'id', name: 'user' })
     @Field(() => User, { nullable: true, description: 'Created by' })
     user?: User;
 
-    @Prop({ required: true })
+    @Column({ type: 'varchar', length: 255, nullable: true })
     @Field(() => String, { description: 'Name of product' })
     name: string;
 
-    @Prop({ nullable: true })
+    @Column({ type: 'real', default: 0 })
     @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
-    p?: number;
+    proteins: number;
 
-    @Prop({ nullable: true })
+    @Column({ type: 'real', default: 0 })
     @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
-    c?: number;
+    carbs: number;
 
-    @Prop({ nullable: true })
+    @Column({ type: 'real', default: 0 })
     @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
-    f?: number;
+    fats: number;
 
-    @Prop({ nullable: true })
-    @Field(() => Date, { nullable: true, description: 'Created at' })
-    createdAt?: Date;
+    // PREV "v"
+    @Column({ type: 'bool', default: false })
+    @Field(() => Boolean, { nullable: true, description: 'Verified' })
+    isVerified: boolean;
 
-    @Prop({ nullable: true })
-    @Field(() => Date, { nullable: true, description: 'Last updated at' })
-    updatedAt?: Date;
+    // PREV "deleted"
+    @Column({ type: 'bool', default: false })
+    @Field(() => Boolean, { nullable: true, description: 'Deleted' })
+    isDeleted: boolean;
+
+    // @Column()
+    // @Field(() => Date, { nullable: true, description: 'Created at' })
+    // createdAt?: Date;
+
+    // @Column()
+    // @Field(() => Date, { nullable: true, description: 'Last updated at' })
+    // updatedAt?: Date;
 }
-
-export const ProductSchema = SchemaFactory.createForClass(Product);

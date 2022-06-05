@@ -7,13 +7,13 @@ services:
             context: client
             dockerfile: Dockerfile
         expose:
-            - "80"
+            - "3000"
         volumes:
             - ./client:/app
             - /app/node_modules
             - /app/.next
         ports:
-            - "80:80"
+            - "3000:3000"
 
     backend:
         container_name: backend
@@ -66,9 +66,9 @@ services:
         env_file:
             - docker.env
         expose:
-            - "4000"
+            - "80"
         ports:
-            - "4000:4000"
+            - "80:80"
         networks:
             - postgres
 

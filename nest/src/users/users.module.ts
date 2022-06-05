@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { MailerModule } from 'src/mailer/mailer.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
     imports: [
         MailerModule,
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])
+        TypeOrmModule.forFeature([User]),
     ],
     providers: [UsersResolver, UsersService],
     exports: [UsersService, UsersModule],

@@ -7,17 +7,15 @@ import { FindOneDailyInput } from './dto/find-one-daily.input';
 import { UpdateDailyInput } from './dto/update-daily.input';
 import { Daily, DailyDocument } from './entities/daily.entity';
 import { get } from 'lodash'
-import { User, UserDocument } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class DailiesService {
     constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
         @InjectModel(Daily.name) private dailyModel: Model<DailyDocument>,
     ) {}
 
     async create(createDailyInput: CreateDailyInput, context: Ctx) {
-        const user = get(context.req.user, '_id')
+        const user = get(context.req.user, 'id')
 
         const isAlreadyExisting = await this.dailyModel.findOne({
             user,
@@ -40,7 +38,8 @@ export class DailiesService {
     }
 
     async findOne({ login, whenAdded }: FindOneDailyInput) {
-        const user = await this.userModel.findOne({ login })
+        // const user = await this.userModel.findOne({ login })
+        const user = { id: 'FIX IT'}
 
         if (!user) {
             throw new NotFoundException()
@@ -48,7 +47,7 @@ export class DailiesService {
 
         const daily = await this.dailyModel.findOne({
             whenAdded,
-            user: user._id,
+            user: user.id,
         }).populate('user');
 
         if (!daily) {
@@ -58,7 +57,7 @@ export class DailiesService {
         return daily
     }
 
-    update(_id: mongoose.Schema.Types.ObjectId, updateDailyInput: UpdateDailyInput) {
-        return `This action updates a #${_id} daily`;
+    update(id: mongoose.Schema.Types.ObjectId, updateDailyInput: UpdateDailyInput) {
+        return `This action updates a #${id} daily`;
     }
 }

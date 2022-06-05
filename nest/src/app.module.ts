@@ -10,7 +10,7 @@ import { MongooseModuleUtils } from './utils/mongooseModule.utils';
 import { MailerModuleUtils } from './utils/mailerModule.utils';
 import { DailiesModule } from './dailies/dailies.module';
 import * as Joi from 'joi';
-import { DatabaseUtils } from './utils/database.utils';
+import { PostgresUtils } from './utils/postgres.utils';
 
 @Module({
     imports: [
@@ -27,7 +27,7 @@ import { DatabaseUtils } from './utils/database.utils';
             //     PORT: Joi.number(),
             // }),
         }),
-        DatabaseUtils,
+        PostgresUtils,
         MailerModuleUtils,
         GraphQLModuleUtils,
         MongooseModuleUtils,

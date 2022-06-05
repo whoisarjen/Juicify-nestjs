@@ -9,17 +9,17 @@ export class CreateProductInput {
     nullable: true,
     description: 'Number of grams per 100g/ml',
   })
-  p?: number;
+  proteins?: number;
 
   @Field(() => Float, {
     nullable: true,
     description: 'Number of grams per 100g/ml',
   })
-  c?: number;
+  carbs?: number;
 
   @Field(() => Float, {
     nullable: true,
     description: 'Number of grams per 100g/ml',
   })
-  f?: number;
+  fats?: number;
 }

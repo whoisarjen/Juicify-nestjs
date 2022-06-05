@@ -30,6 +30,6 @@ export class DailiesResolver {
 
     @Mutation(() => Daily)
     updateDaily(@Args('updateDailyInput') updateDailyInput: UpdateDailyInput) {
-        return this.dailiesService.update(updateDailyInput._id, updateDailyInput);
+        return this.dailiesService.update(updateDailyInput.id, updateDailyInput);
     }
 }

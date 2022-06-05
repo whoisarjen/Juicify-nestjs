@@ -1,12 +1,10 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
 import { Ctx } from 'src/types/context.type';
 import { ConfirmUserInput } from './dto/confirm-user.input';
 import { CreateUserInput } from './dto/create-user.input';
 import { LoginUserInput } from './dto/login-user.input';
-import { User, UserDocument } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { omit, pick, get } from 'lodash';
 import { decode, signJwt } from 'src/utils/jwt.utils';
 import { ConfigService } from '@nestjs/config';
@@ -14,33 +12,26 @@ import { USER_OMITTED_PROPERTIES } from 'src/utils/user.utils'
 import { RequestRefreshPasswordInput } from './dto/request-refresh-password.input';
 import { ConfirmRefreshPasswordInput } from './dto/confirm-refresh-password.input';
 import { MailerService } from 'src/mailer/mailer.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
         private mailerService: MailerService,
         private configService: ConfigService,
+        @InjectRepository(User)
+        private usersRepository: Repository<User>
     ) {}
 
     async create(createUserInput: CreateUserInput) {
-        const confirmationToken = nanoid(32)
+        const confirmationToken = nanoid(this.configService.get('NANOID_SIZE'))
 
-        const user = await this.userModel.findOne({
-            $or: [
-                {
-                    login: {
-                        $regex: createUserInput.login,
-                        $options: 'im',
-                    }
-                },
-                {
-                    email: {
-                        $regex: createUserInput.email,
-                        $options: 'im',
-                    }
-                }
-            ]
+        const user = await this.usersRepository.findOne({
+            where: [
+                { login: createUserInput.login },
+                { email: createUserInput.email },
+            ],
         })
 
         if (user) {
@@ -50,24 +41,41 @@ export class UsersService {
             }, HttpStatus.FORBIDDEN);
         }
 
-        return await this.userModel.create({
+        const created = await this.usersRepository.create({
             ...createUserInput,
             confirmationToken,
         })
+
+        await this.usersRepository.save(created);
+
+        return created;
     }
 
-    async confirm(confirmUserInput: ConfirmUserInput) {
-        const user = await this.userModel.findOneAndUpdate(confirmUserInput, { isConfirmed: true })
+    async confirm({ email, confirmationToken }: ConfirmUserInput) {
+        const user = await this.usersRepository.findOne({
+            where: {
+                email,
+                confirmationToken,
+            }
+        })
 
         if (!user) {
             throw new NotFoundException()
         }
 
+        this.usersRepository.update(user.id, {
+            isConfirmed: true,
+        })
+
         return user;
     }
 
     async login({ login, password }: LoginUserInput, context: Ctx, isRefresh?: boolean) {
-        const user = await this.userModel.findOne({ login })
+        const user = await this.usersRepository.findOne({
+            where: {
+                login,
+            }
+        })
 
         const current_refresh_token = get(context.req, `cookies.${this.configService.get('REFRESH_TOKEN_NAME')}`)
         const session_time = current_refresh_token ? get(await decode(current_refresh_token), ['session_time']) : null
@@ -98,12 +106,12 @@ export class UsersService {
         }
 
         const token = signJwt(
-            omit(user.toJSON(), USER_OMITTED_PROPERTIES),
+            omit(user, USER_OMITTED_PROPERTIES),
             this.configService.get('TOKEN_SETTINGS'),
         )
         const refresh_token = signJwt(
             {
-                ...pick(user.toJSON(), ['login']),
+                ...pick(user, ['login']),
                 session_time: new Date().getTime(),
             },
             this.configService.get('REFRESH_TOKEN_SETTINGS'),
@@ -145,8 +153,12 @@ export class UsersService {
         return null
     }
 
-    async requestRefreshPassword(requestRefreshPasswordInput: RequestRefreshPasswordInput) {
-        const user = await this.userModel.findOne(requestRefreshPasswordInput)
+    async requestRefreshPassword({ email }: RequestRefreshPasswordInput) {
+        const user = await this.usersRepository.findOne({
+            where: {
+                email,
+            }
+        })
 
         if (!user) {
             throw new NotFoundException()
@@ -154,20 +166,27 @@ export class UsersService {
 
         const refreshPasswordToken = nanoid(32)
 
-        await user.update({ refreshPasswordToken })
-
-        await this.mailerService.sendMail({
-            to: user.email,
-            subject: 'Confirm reset password',
-            text: refreshPasswordToken,
-            html: refreshPasswordToken,
+        await this.usersRepository.update(user.id, {
+            refreshPasswordToken
         })
+
+        // await this.mailerService.sendMail({
+        //     to: user.email,
+        //     subject: 'Confirm reset password',
+        //     text: refreshPasswordToken,
+        //     html: refreshPasswordToken,
+        // })
 
         return null
     }
 
-    async confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput) {
-        const user = await this.userModel.findOne(confirmRefreshPasswordInput)
+    async confirmRefreshPassword({ email, refreshPasswordToken }: ConfirmRefreshPasswordInput) {
+        const user = await this.usersRepository.findOne({
+            where: {
+                email: email,
+                refreshPasswordToken: refreshPasswordToken,
+            }
+        })
 
         if (!user) {
             throw new NotFoundException()
@@ -175,15 +194,16 @@ export class UsersService {
 
         const password = nanoid(32)
 
-        user.password = password
-        await user.save()
-
-        await this.mailerService.sendMail({
-            to: user.email,
-            subject: 'Your new password',
-            text: password,
-            html: password,
+        await this.usersRepository.update(user.id, {
+            password,
         })
+
+        // await this.mailerService.sendMail({
+        //     to: user.email,
+        //     subject: 'Your new password',
+        //     text: password,
+        //     html: password,
+        // })
 
         return null
     }

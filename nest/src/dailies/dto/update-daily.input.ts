@@ -4,6 +4,6 @@ import { Daily } from '../entities/daily.entity';
 
 @InputType()
 export class UpdateDailyInput extends PartialType(Daily) {
-	@Field(() => String, { description: '_id' })
-	_id: mongoose.Schema.Types.ObjectId;
+	@Field(() => String, { description: 'id' })
+	id: mongoose.Schema.Types.ObjectId;
 }

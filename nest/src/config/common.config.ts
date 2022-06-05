@@ -1,6 +1,7 @@
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 
 export default () => ({
+    NANOID_SIZE: 32,
     PORT: 5000,
     POSTGRES_HOST: 'postgres',
     POSTGRES_PORT: 5432,

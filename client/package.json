@@ -2,9 +2,9 @@
   "name": "juicify",
   "private": true,
   "scripts": {
-    "dev": "PORT=80 next dev",
-    "build": "PORT=80 next build",
-    "start": "PORT=80 next start",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "test": "NODE_ENV=development jest --watch"
   },

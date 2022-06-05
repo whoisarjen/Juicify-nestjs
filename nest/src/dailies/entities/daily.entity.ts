@@ -8,8 +8,8 @@ export type DailyDocument = Daily & Document;
 @Schema({ timestamps: true })
 @ObjectType()
 export class Daily {
-	@Field(() => String, { description: '_id' })
-	_id: mongoose.Schema.Types.ObjectId;
+	@Field(() => String, { description: 'id' })
+	id: mongoose.Schema.Types.ObjectId;
 
     @Prop({ required: true })
     @Field(() => Date, { description: 'Daily for date' })
