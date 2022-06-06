@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConsumedInput } from './dto/create-consumed.input';
@@ -45,7 +45,11 @@ export class ConsumedService {
             }
         })
 
-        return await this.consumedsRepository.find({
+        if (!user) {
+            throw new NotFoundException()
+        }
+
+        const test = await this.consumedsRepository.find({
             where: {
                 date,
                 user: user.id as any,
@@ -54,7 +58,11 @@ export class ConsumedService {
                 user: true,
                 product: true,
             },
-        });
+        })
+
+        console.log(test)
+
+        return test;
     }
 
     update(id: number, updateConsumedInput: UpdateConsumedInput) {
