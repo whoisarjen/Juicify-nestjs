@@ -119,8 +119,6 @@ export class User {
     @Field(() => Boolean, { description: 'Is user doing extra activity' })
     is_sport_active: boolean
 
-    // kind_of_diet
-    // Can be new class basiclly or enum
     @Column({ type: 'smallint', default: 0 })
     @Field(() => Int, { description: 'What kind of diet user prefer' })
     kind_of_diet: number
@@ -137,7 +135,7 @@ export class User {
     // sugar_percent
     @Column({ type: 'smallint', default: 10 })
     @Field(() => Int, { description: '% of carbs as sugar' })
-    carbsPercentAsSugar: number
+    carbs_percent_as_sugar: number
 
     @Column({ type: 'smallint', default: 0 })
     @Field(() => Int, { description: 'Grams of proteins per day' })

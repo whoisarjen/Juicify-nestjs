@@ -1,11 +1,9 @@
-import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Int, Context } from '@nestjs/graphql';
 import { ConsumedService } from './consumed.service';
 import { Consumed } from './entities/consumed.entity';
 import { CreateConsumedInput } from './dto/create-consumed.input';
 import { UpdateConsumedInput } from './dto/update-consumed.input';
 import { Ctx } from 'src/types/context.type';
-import { FindConsumedInput } from './dto/find-consumed.input';
-import { Public } from 'src/decorators/public.decorator';
 
 @Resolver(() => Consumed)
 export class ConsumedResolver {
@@ -17,15 +15,6 @@ export class ConsumedResolver {
         @Context() context: Ctx,
     ) {
         return this.consumedService.create(createConsumedInput, context);
-    }
-
-    @Public()
-    @Query(() => [Consumed], { name: 'consumed', nullable: true })
-    findOne(
-        @Args('findConsumedInput') findConsumedInput: FindConsumedInput,
-        @Context() context: Ctx,
-    ) {
-        return this.consumedService.findOneDay(findConsumedInput, context);
     }
 
     @Mutation(() => Consumed)

@@ -56,12 +56,12 @@ const Submit = styled.div`
 
 const BaseBoxProduct = ({ product, openMoreInformation, getTheme, value, handleValueChange, checked, handleCheck, handleLike, fav, t }: any) => {
     return (
-        <Grid style={{ borderLeft: product.v ? `5px solid ${getTheme('PRIMARY')}` : '' }}>
+        <Grid style={{ borderLeft: product.is_verified ? `5px solid ${getTheme('PRIMARY')}` : '' }}>
             <Name style={{ color: getTheme('PRIMARY') }}>
                 {product.name}
             </Name>
             <Description>
-                {(product.p || 0)}{t('P')} {(product.c || 0)}{t('C')} {(product.f || 0)}{t('F')} {getCalories(product)}kcal
+                {(product.proteins?.toFixed(1) || 0)}{t('P')} {(product.carbs?.toFixed(1) || 0)}{t('C')} {(product.fats?.toFixed(1) || 0)}{t('F')} {getCalories(product)}kcal
             </Description>
             <Favourite onClick={handleLike} data-testid="handleLike">
                 <Checkbox checked={fav} icon={<FavoriteBorder fontSize="small" />} checkedIcon={<Favorite fontSize="small" />} />

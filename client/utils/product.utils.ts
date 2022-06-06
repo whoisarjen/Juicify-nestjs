@@ -2,15 +2,15 @@ import { ActivitySchemaProps } from "../schema/activity.schema"
 import { PRODUCT_SCHEMA_PROPS } from "../schema/product.schema"
 
 const getProductInformationsObject: any = {
-    'p': 'Proteins',
-    'c': 'Carbs',
-    's': 'Sugar',
-    'f': 'Fats',
-    'fi': 'Fiber',
-    'na': 'Salt',
+    'proteins': 'Proteins',
+    'carbs': 'Carbs',
+    'sugar': 'Sugar',
+    'fats': 'Fats',
+    'fiber': 'Fiber',
+    'salt': 'Salt',
     'ethanol': 'Ethanol',
     'calories': 'Calories',
-    'v': 'Verified'
+    'is_verified': 'Verified'
 }
 
 export const getProductInformations = (object: PRODUCT_SCHEMA_PROPS & ActivitySchemaProps) => {
@@ -26,16 +26,16 @@ export const getProductInformations = (object: PRODUCT_SCHEMA_PROPS & ActivitySc
     })
     return {
         Name: object.name,
-        ...(object.code && { Code: object.code }),
+        ...(object.barcode && { barcode: object.barcode }),
         ...newObject,
-        Calories: Math.round((object.p || 0) * 4 + (object.c || 0) * 4 + (object.f || 0) * 9) + 'kcal'
+        Calories: Math.round((object.proteins || 0) * 4 + (object.carbs || 0) * 4 + (object.fats || 0) * 9) + 'kcal'
     }
 }
 
 interface getCaloriesProps {
-    p?: number,
-    c?: number,
-    f?: number,
+    proteins?: number,
+    carbs?: number,
+    fats?: number,
     ethanol?: number,
     calories?: number,
     how_many?: number,
@@ -48,19 +48,19 @@ export const getCalories = (object: getCaloriesProps) => {
     if (object.calories) {
         return parseInt((object.calories).toString())
     } else {
-        return parseInt(((object.p || 0) * (object.how_many || 1) * 4 + (object.c || 0) * (object.how_many || 1) * 4 + (object.f || 0) * (object.how_many || 1) * 9 + (object.ethanol || 0) * (object.how_many || 1) * 7).toString())
+        return parseInt(((object.proteins || 0) * (object.how_many || 1) * 4 + (object.carbs || 0) * (object.how_many || 1) * 4 + (object.fats || 0) * (object.how_many || 1) * 9 + (object.ethanol || 0) * (object.how_many || 1) * 7).toString())
     }
 }
 
 export const getMacronutrient = (object: getCaloriesProps, macronutrient: string) => {
     if (macronutrient == 'p') {
-        return (object.p || 0) * (object.how_many || 1)
+        return (object.proteins || 0) * (object.how_many || 1)
     }
     if (macronutrient == 'c') {
-        return (object.c || 0) * (object.how_many || 1)
+        return (object.carbs || 0) * (object.how_many || 1)
     }
     if (macronutrient == 'f') {
-        return (object.f || 0) * (object.how_many || 1)
+        return (object.fats || 0) * (object.how_many || 1)
     }
 
     return 0;

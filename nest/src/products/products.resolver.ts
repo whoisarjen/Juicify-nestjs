@@ -4,6 +4,7 @@ import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { FindProductsInput } from './dto/find-products.input';
 import { Ctx } from 'src/types/context.type';
+import { Public } from 'src/decorators/public.decorator';
 
 @Resolver(() => Product)
 export class ProductsResolver {
@@ -17,13 +18,9 @@ export class ProductsResolver {
         return await this.productsService.create(createProductInput, context);
     }
 
+    @Public()
     @Query(() => [Product], { name: 'products' })
     findAll(@Args('findProductsInput') findProductsInput: FindProductsInput) {
         return this.productsService.findAll(findProductsInput);
     }
-
-    // @Mutation(() => Product)
-    // removeProduct(@Args('id', { type: () => String }) id: string) {
-    //     return this.productsService.remove(id);
-    // }
 }

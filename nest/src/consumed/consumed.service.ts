@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConsumedInput } from './dto/create-consumed.input';
@@ -7,15 +7,12 @@ import { Consumed } from './entities/consumed.entity';
 import { get } from 'lodash'
 import { Ctx } from 'src/types/context.type';
 import { FindConsumedInput } from './dto/find-consumed.input';
-import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ConsumedService {
     constructor(
         @InjectRepository(Consumed)
         private consumedsRepository: Repository<Consumed>,
-        @InjectRepository(User)
-        private usersRepository: Repository<User>,
     ) { }
 
     async create(createConsumedInput: CreateConsumedInput, context: Ctx) {
@@ -38,37 +35,59 @@ export class ConsumedService {
         });
     }
 
-    async findOneDay({ login, date }: FindConsumedInput, context: Ctx) {
-        const user = get(context.req.user, 'id')
+    // async findOneDay({ login, date }: FindConsumedInput, context: Ctx) {
+    //     const tokenId = get(context.req.user, 'id')
 
-        const { id, is_public } = await this.usersRepository.findOne({
-            where: {
-                login,
-            }
-        })
+    //     const user = await this.usersRepository.findOne({
+    //         where: {
+    //             login,
+    //         }
+    //     })
 
-        if (!user) {
-            throw new NotFoundException()
-        }
+    //     if (!user) {
+    //         throw new NotFoundException()
+    //     }
 
-        if (!is_public && id !== user.id) {
-            throw new ForbiddenException()
-        }
+    //     if (!user.is_public && user.id !== tokenId) {
+    //         throw new ForbiddenException()
+    //     }
 
-        const test = await this.consumedsRepository.find({
-            where: {
-                date,
-                user: id as any,
-            },
-            relations: {
-                user: true,
-                product: true,
-            },
-        })
+    //     const consumedPerDay = await this.consumedsRepository.find({
+    //         where: {
+    //             date,
+    //             user: user.id as any,
+    //         },
+    //         relations: {
+    //             product: true,
+    //         },
+    //     })
 
-        console.log(test)
+    //     return {
+    //         user,
+    //         consumedPerDay,
+    //     };
+    // }
+    
+    async findOneDay({ id, date }: FindConsumedInput) {
+        const consumedPerDay = await this.consumedsRepository
+            .createQueryBuilder('consumed')
+            .where('consumed.user = :id', { id })
+            .andWhere("consumed.date = :date", { date })
+            .leftJoinAndSelect('consumed.product', 'product')
+            .getMany()
+        // .find({
+        //     where: {
+        //         date,
+        //         user: id,
+        //     },
+        //     relations: {
+        //         product: true,
+        //     },
+        // })
 
-        return test;
+        console.log(consumedPerDay)
+
+        return consumedPerDay
     }
 
     update(id: number, updateConsumedInput: UpdateConsumedInput) {

@@ -11,6 +11,7 @@ import { MailerModuleUtils } from './utils/mailerModule.utils';
 import * as Joi from 'joi';
 import { PostgresUtils } from './utils/postgres.utils';
 import { ConsumedModule } from './consumed/consumed.module';
+import { UserConsumedModule } from './user-consumed/user-consumed.module';
 
 @Module({
     imports: [
@@ -34,6 +35,7 @@ import { ConsumedModule } from './consumed/consumed.module';
         UsersModule,
         ProductsModule,
         ConsumedModule,
+        UserConsumedModule,
     ],
     controllers: [AppController],
     providers: [AppService],

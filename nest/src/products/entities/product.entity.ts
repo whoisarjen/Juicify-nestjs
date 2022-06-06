@@ -38,25 +38,27 @@ export class Product {
     @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
     fiber: number;
 
+    @Column({ type: 'real', default: 0 })
+    @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
+    salt: number;
+
+    @Column({ type: 'real', default: 0 })
+    @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
+    ethanol: number;
+
     @Column({ type: 'int', default: null })
     @Field(() => Int, { nullable: true, description: 'Barcode' })
     barcode: number;
 
-    // PREV "v"
+    @Column({ type: 'bool', default: false })
+    @Field(() => Boolean, { nullable: true, description: 'Product waiting for check' })
+    is_expecting_check: boolean;
+
     @Column({ type: 'bool', default: false })
     @Field(() => Boolean, { nullable: true, description: 'Verified' })
-    isVerified: boolean;
+    is_verified: boolean;
 
-    // PREV "deleted"
     @Column({ type: 'bool', default: false })
     @Field(() => Boolean, { nullable: true, description: 'Deleted' })
-    isDeleted: boolean;
-
-    // @Column()
-    // @Field(() => Date, { nullable: true, description: 'Created at' })
-    // createdAt?: Date;
-
-    // @Column()
-    // @Field(() => Date, { nullable: true, description: 'Last updated at' })
-    // updatedAt?: Date;
+    is_deleted: boolean;
 }

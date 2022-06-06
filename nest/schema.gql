@@ -79,7 +79,7 @@ type User {
   fiber: Int!
 
   """% of carbs as sugar"""
-  carbsPercentAsSugar: Int!
+  carbs_percent_as_sugar: Int!
 
   """Grams of proteins per day"""
   proteins_day_0: Int!
@@ -178,14 +178,23 @@ type Product {
   """Number of grams per 100g/ml"""
   fiber: Float
 
+  """Number of grams per 100g/ml"""
+  salt: Float
+
+  """Number of grams per 100g/ml"""
+  ethanol: Float
+
   """Barcode"""
   barcode: Int
 
+  """Product waiting for check"""
+  is_expecting_check: Boolean
+
   """Verified"""
-  isVerified: Boolean
+  is_verified: Boolean
 
   """Deleted"""
-  isDeleted: Boolean
+  is_deleted: Boolean
 }
 
 type Consumed {
@@ -208,13 +217,22 @@ type Consumed {
   date: DateTime!
 }
 
+type UserConsumed {
+  """Created by"""
+  user: User!
+
+  """Created by"""
+  consumed: [Consumed!]!
+}
+
 type Query {
   login(loginUserInput: LoginUserInput!): User
   logout: User
   requestRefreshPassword(requestRefreshPasswordInput: RequestRefreshPasswordInput!): User
   confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput!): User
   products(findProductsInput: FindProductsInput!): [Product!]!
-  consumed(findConsumedInput: FindConsumedInput!): [Consumed!]
+  userConsumedPerDays: [UserConsumed!]!
+  userConsumedPerDay: UserConsumed!
 }
 
 input LoginUserInput {
@@ -241,14 +259,6 @@ input ConfirmRefreshPasswordInput {
 input FindProductsInput {
   """Name of product"""
   name: String!
-}
-
-input FindConsumedInput {
-  """Created by"""
-  login: String!
-
-  """Day of eatting"""
-  date: DateTime!
 }
 
 type Mutation {

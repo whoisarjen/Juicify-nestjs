@@ -48,22 +48,4 @@ export class UsersResolver {
     confirmRefreshPassword(@Args('confirmRefreshPasswordInput') confirmRefreshPasswordInput: ConfirmRefreshPasswordInput) {
         return this.usersService.confirmRefreshPassword(confirmRefreshPasswordInput);
     }
-
-    // @Public()
-    // @Query(() => [User], { name: 'users' })
-    // findAll() {
-    //     return this.usersService.findAll();
-    // }
-
-    // @Public()
-    // @Query(() => User, { name: 'user' })
-    // findOne(@Args('login', { type: () => String }) login: string) {
-    //     return this.usersService.findOne(login);
-    // }
-
-    // @Public()
-    // @Mutation(() => User)
-    // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    //     return this.usersService.update(updateUserInput.id, updateUserInput);
-    // }
 }

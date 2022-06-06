@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import { Ctx } from 'src/types/context.type';
 import { ConfirmUserInput } from './dto/confirm-user.input';
@@ -11,14 +11,14 @@ import { ConfigService } from '@nestjs/config';
 import { USER_OMITTED_PROPERTIES } from 'src/utils/user.utils'
 import { RequestRefreshPasswordInput } from './dto/request-refresh-password.input';
 import { ConfirmRefreshPasswordInput } from './dto/confirm-refresh-password.input';
-import { MailerService } from 'src/mailer/mailer.service';
+// import { MailerService } from 'src/mailer/mailer.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
     constructor(
-        private mailerService: MailerService,
+        // private mailerService: MailerService,
         private configService: ConfigService,
         @InjectRepository(User)
         private usersRepository: Repository<User>
@@ -35,10 +35,7 @@ export class UsersService {
         })
 
         if (user) {
-            throw new HttpException({
-                status: HttpStatus.FORBIDDEN,
-                error: 'Login or email already in used!',
-            }, HttpStatus.FORBIDDEN);
+            throw new ForbiddenException('Login or email already in used!')
         }
 
         const created = await this.usersRepository.create({
@@ -91,18 +88,12 @@ export class UsersService {
 
         if (!user.is_confirmed) {
             await this.logout(context)
-            throw new HttpException({
-                status: HttpStatus.FORBIDDEN,
-                error: 'Account is not activated',
-            }, HttpStatus.FORBIDDEN);
+            throw new ForbiddenException('Account is not activated')
         }
 
         if (user.is_banned) {
             await this.logout(context)
-            throw new HttpException({
-                status: HttpStatus.FORBIDDEN,
-                error: 'This Account Has Been Suspended',
-            }, HttpStatus.FORBIDDEN);
+            throw new ForbiddenException('This Account Has Been Suspended')
         }
 
         const token = signJwt(
@@ -208,16 +199,23 @@ export class UsersService {
         return null
     }
 
-    // findAll() {
-    //     return `This action returns all users`;
-    // }
+    async findOne(args: { login: string } | { email: string }, context: Ctx) {
+        const user = await this.usersRepository.findOne({
+            where: {
+                ...args as any
+            }
+        })
 
-    // async findOne(login: string) {
-    //     console.log('CUT SOME DATA HERE!')
-    //     return await (await this.userModel.findOne({ login })).toJSON();
-    // }
+        if (!user) {
+            throw new NotFoundException()
+        }
 
-    // update(id: number, updateUserInput: UpdateUserInput) {
-    //     return `This action updates a #${id} user`;
-    // }
+        const tokenId = get(context.req.user, 'id')
+
+        if (!user.is_public && user.id !== tokenId) {
+            throw new ForbiddenException()
+        }
+
+        return user
+    }
 }

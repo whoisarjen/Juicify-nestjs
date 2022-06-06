@@ -35,43 +35,15 @@ export class ProductsService {
     }
 
     async findAll({ name }: FindProductsInput) {
-        const products = await this.productsRepository.find({
+        return await this.productsRepository.find({
             where: {
                 name: Like(`%${name}%`),
             },
             order: {
                 name: "ASC",
-                isVerified: "DESC",
+                is_verified: "DESC",
             },
             take: 10,
         })
-
-        return products;
-        // return await this.productModel.find({
-        //     $and:
-        //         [
-        //             { userid: { $exists: false } },
-        //             { deleted: { $exists: false } },
-        //             name.split(" ").length > 1
-        //                 ? {
-        //                     name: {
-        //                         $regex: name,
-        //                         $options: 'im'
-        //                     }
-        //                 }
-        //                 : {
-        //                     $text: {
-        //                         $search: name.split(" ").map((str: any) => "\"" + str + "\"").join(' ')
-        //                     }
-        //                 }
-        //         ]
-        // })
-        //     .sort({ l: 1, v: -1 })
-        //     .limit(10)
     }
-
-    // async remove(id: string) {
-    //     await this.productModel.deleteOne({ id });
-    //     return { id };
-    // }
 }
