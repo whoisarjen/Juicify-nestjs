@@ -80,7 +80,7 @@ const AddWeight = ({ children }: AddWeightProps) => {
                             {
                                 data?.length > 0 &&
                                 data.map((x: DailyMeasurementSchemaProps) =>
-                                    <TimelineItem key={x._id}>
+                                    <TimelineItem key={x.id}>
                                         <TimelineOppositeContent color="text.secondary">
                                             {reverseDateDotes(x.whenAdded)}
                                         </TimelineOppositeContent>

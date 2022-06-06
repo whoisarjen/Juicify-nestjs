@@ -3,7 +3,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { store } from "../redux/store";
 import { Provider } from "react-redux";
 import Layout from "../components/layout/Layout";
-import Socket from "../components/layout/Socket";
 import MUI from "../components/layout/MUI";
 import Notify from "../components/layout/Notify";
 import { UrqlClient, ProviderURQL } from "../utils/urql.utils";
@@ -13,13 +12,11 @@ const App = ({ Component, pageProps }: { Component: any, pageProps: any }) => {
         <MUI>
             <ProviderURQL value={UrqlClient}>
                 <Provider store={store}>
-                    <Socket>
-                        <Notify>
-                            <Layout>
-                                <Component {...pageProps} />
-                            </Layout>
-                        </Notify>
-                    </Socket>
+                    <Notify>
+                        <Layout>
+                            <Component {...pageProps} />
+                        </Layout>
+                    </Notify>
                 </Provider>
             </ProviderURQL>
         </MUI>

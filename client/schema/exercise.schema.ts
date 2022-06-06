@@ -1,8 +1,8 @@
 import { number, object, string, TypeOf } from 'zod'
 
 export const ExerciseSchema = object({
-    _id: string().optional(),
-    user_ID: string().optional(),
+    id: string().optional(),
+    userid: string().optional(),
     name: string().min(3),
     l: number().optional(),
 })

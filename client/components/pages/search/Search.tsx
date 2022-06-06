@@ -14,7 +14,7 @@ const BaseSearch = ({ data, router }: useSearchProps) => {
             <List sx={{ width: '100%', bgcolor: 'background.paper', marginTop: '12px' }}>
                 {
                     data?.items?.map((user: any) =>
-                        <ListItemButton onClick={() => router.push(`/${user.login}`)} key={user._id}>
+                        <ListItemButton onClick={() => router.push(`/${user.login}`)} key={user.id}>
                             <ListItemAvatar>
                                 <Avatar user={user} size="40px" />
                             </ListItemAvatar>

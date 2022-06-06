@@ -10,25 +10,25 @@ export const createIndexedDB = async (): Promise<any> => {
     request.onupgradeneeded = function (event: any) {
       const db = event.target.result;
       let objectStore;
-      objectStore = db.createObjectStore("product", { keyPath: "_id" });
-      objectStore = db.createObjectStore("cache_product", { keyPath: "_id" });
-      objectStore = db.createObjectStore("checked_product", { keyPath: "_id" });
-      objectStore = db.createObjectStore("last_used_product", { keyPath: "_id", });
-      objectStore = db.createObjectStore("favourite_product", { keyPath: "_id", });
+      objectStore = db.createObjectStore("product", { keyPath: "id" });
+      objectStore = db.createObjectStore("cache_product", { keyPath: "id" });
+      objectStore = db.createObjectStore("checked_product", { keyPath: "id" });
+      objectStore = db.createObjectStore("last_used_product", { keyPath: "id", });
+      objectStore = db.createObjectStore("favourite_product", { keyPath: "id", });
 
-      objectStore = db.createObjectStore("exercise", { keyPath: "_id" });
-      objectStore = db.createObjectStore("cache_exercise", { keyPath: "_id" });
-      objectStore = db.createObjectStore("checked_exercise", { keyPath: "_id", });
-      objectStore = db.createObjectStore("last_used_exercise", { keyPath: "_id", });
-      objectStore = db.createObjectStore("favourite_exercise", { keyPath: "_id", });
+      objectStore = db.createObjectStore("exercise", { keyPath: "id" });
+      objectStore = db.createObjectStore("cache_exercise", { keyPath: "id" });
+      objectStore = db.createObjectStore("checked_exercise", { keyPath: "id", });
+      objectStore = db.createObjectStore("last_used_exercise", { keyPath: "id", });
+      objectStore = db.createObjectStore("favourite_exercise", { keyPath: "id", });
 
-      objectStore = db.createObjectStore("workout_plan", { keyPath: "_id" });
-      objectStore = db.createObjectStore("workout_result", { keyPath: "_id" });
+      objectStore = db.createObjectStore("workout_plan", { keyPath: "id" });
+      objectStore = db.createObjectStore("workout_result", { keyPath: "id" });
       objectStore = db.createObjectStore("daily_measurement", { keyPath: "whenAdded", });
-      objectStore = db.createObjectStore("last_searched_users", { keyPath: "_id", });
+      objectStore = db.createObjectStore("last_searched_users", { keyPath: "id", });
 
-      objectStore = db.createObjectStore("whatToUpdate", { keyPath: "_id" });
-      objectStore = db.createObjectStore("socketUpdated", { keyPath: "_id" });
+      objectStore = db.createObjectStore("whatToUpdate", { keyPath: "id" });
+      objectStore = db.createObjectStore("socketUpdated", { keyPath: "id" });
       objectStore.transaction.oncomplete = async () => resolve(true);
     };
   });
@@ -92,13 +92,13 @@ export const putIndexedDB = async (
   });
 };
 
-export const deleteIndexedDB = async (where: string, _id: string): Promise<any> => {
+export const deleteIndexedDB = async (where: string, id: string): Promise<any> => {
   let request = await connectIndexedDB();
   request.onsuccess = async function () {
     await request.result
       .transaction(where, "readwrite")
       .objectStore(where)
-      .delete(_id.toString());
+      .delete(id.toString());
   };
   return true;
 };
@@ -106,7 +106,7 @@ export const deleteIndexedDB = async (where: string, _id: string): Promise<any> 
 export const addIndexedDB = async (where: string, value: Array<any>): Promise<any> => {
   if (value && value.length > 0) {
     for (let i = 0; i < value.length; i++) {
-      value[i]._id = value[i]._id.toString();
+      value[i].id = value[i].id.toString();
     }
     let request = await connectIndexedDB();
     return new Promise((resolve) => {
@@ -126,7 +126,7 @@ export const addIndexedDB = async (where: string, value: Array<any>): Promise<an
 export const putInformationAboutNeededUpdate = async (where: string, time?: number): Promise<any> => {
   if (!getOnline()) {
     if (!(await getIndexedDBbyID("whatToUpdate", where))) {
-      await addIndexedDB("whatToUpdate", [{ _id: where, },]);
+      await addIndexedDB("whatToUpdate", [{ id: where, },]);
     }
   }
   return true;

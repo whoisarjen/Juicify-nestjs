@@ -107,7 +107,13 @@ type Product {
   carbs: Float
 
   """Number of grams per 100g/ml"""
+  sugar: Float
+
+  """Number of grams per 100g/ml"""
   fats: Float
+
+  """Number of grams per 100g/ml"""
+  fiber: Float
 
   """Barcode"""
   barcode: Int
@@ -145,7 +151,7 @@ type Query {
   requestRefreshPassword(requestRefreshPasswordInput: RequestRefreshPasswordInput!): User
   confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput!): User
   products(findProductsInput: FindProductsInput!): [Product!]!
-  consumed(date: DateTime!): Consumed!
+  consumed(findConsumedInput: FindConsumedInput!): [Consumed!]
 }
 
 input LoginUserInput {
@@ -172,6 +178,14 @@ input ConfirmRefreshPasswordInput {
 input FindProductsInput {
   """Name of product"""
   name: String!
+}
+
+input FindConsumedInput {
+  """Created by"""
+  login: String!
+
+  """Day of eatting"""
+  date: DateTime!
 }
 
 type Mutation {

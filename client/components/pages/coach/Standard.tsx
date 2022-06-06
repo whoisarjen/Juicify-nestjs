@@ -85,7 +85,7 @@ const Standard = ({ setStep }: StandardProps) => {
         if (token) {
             setDaysToCoach(getDiffrentBetweenDays(token.coach || getShortDate(), getShortDate()))
         }
-    }, [token._id])
+    }, [token.id])
 
     return (
         <Grid>

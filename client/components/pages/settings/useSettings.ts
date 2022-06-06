@@ -31,7 +31,7 @@ const useSettings = () => {
         resolver: zodResolver(SettingsSchema)
     })
 
-    useEffect(() => reset(token), [token._id])
+    useEffect(() => reset(token), [token.id])
 
     return { changeSettings, isDirty, errors, register, handleSubmit, t, logout }
 }

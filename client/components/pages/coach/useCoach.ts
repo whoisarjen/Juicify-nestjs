@@ -41,7 +41,7 @@ const useCoach = () => {
                     isUseData,
                     today: getShortDate(),
                     age: getAge(token.birth),
-                    data: await loadMissingDays(await getAllIndexedDB('daily_measurement'), token._id, 15, getShortDate())
+                    data: await loadMissingDays(await getAllIndexedDB('daily_measurement'), token.id, 15, getShortDate())
                 }
             })
             await dispatchToken(response.data)

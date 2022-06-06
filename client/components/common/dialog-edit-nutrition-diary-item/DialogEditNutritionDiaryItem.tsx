@@ -76,7 +76,7 @@ const BaseDialogEditNutritionDiaryItem = ({ product, children, isDialog, setIsDi
 
                 </DialogContent>
                 <DialogActions>
-                    <ConfirmDialog confirmed={() => deleteProduct(product._id)}>
+                    <ConfirmDialog confirmed={() => deleteProduct(product.id)}>
                         <Button sx={{ color: 'red' }}>{t('Delete')}</Button>
                     </ConfirmDialog>
                     <Button onClick={() => setIsDialog(false)}>{t('Deny')}</Button>

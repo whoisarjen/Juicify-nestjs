@@ -1,9 +1,9 @@
 import { boolean, number, object, preprocess, string, TypeOf } from 'zod'
 
 export const ProductSchema = object({
-    _id: string(),
+    id: string(),
     name: string().min(3),
-    product_ID: string().optional(),
+    productid: string().optional(),
     meal: preprocess((val) => Number(val), number()).optional(),
     p: preprocess((val) => Number(val), number()).optional(),
     c: preprocess((val) => Number(val), number()).optional(),

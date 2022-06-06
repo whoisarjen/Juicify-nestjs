@@ -4,8 +4,8 @@ import { WorkoutResultSchema } from './workoutResult.schema'
 import { ActivitySchema } from './activity.schema'
 
 export const DailyMeasurementSchema = object({
-    _id: string(),
-    user_ID: string(),
+    id: string(),
+    userid: string(),
     whenAdded: string(),
     weight: preprocess((val) => Number(val), number()),
     nutrition_diary: array(ProductSchema.or(ActivitySchema)),

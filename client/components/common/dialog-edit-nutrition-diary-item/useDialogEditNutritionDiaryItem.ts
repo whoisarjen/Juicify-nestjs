@@ -15,7 +15,7 @@ const useDialogEditNutritionDiaryItem = ({ product, dailyMeasurement, children }
     const changeNutritionDiary = async (values: ActivitySchemaProps) => {
         let object = { ...product, ...values }
         dailyMeasurement.nutrition_diary = dailyMeasurement.nutrition_diary.map((x: any) => {
-            if (x._id == object._id) {
+            if (x.id == object.id) {
                 return object;
             }
 
@@ -25,10 +25,10 @@ const useDialogEditNutritionDiaryItem = ({ product, dailyMeasurement, children }
         setIsDialog(false)
     }
 
-    const deleteProduct = async (_id: string) => {
+    const deleteProduct = async (id: string) => {
         let copy = JSON.parse(JSON.stringify(dailyMeasurement))
         copy.nutrition_diary = copy.nutrition_diary.map((obj: any) =>
-            obj._id == _id ? { ...obj, deleted: true } : obj
+            obj.id == id ? { ...obj, deleted: true } : obj
         );
         await overwriteThoseIDSinDB('daily_measurement', [copy])
     }

@@ -91,7 +91,7 @@ const BaseDialogAddProducts = ({ children, isDialog, setIsDialog, t, dailyMeasur
                     <AddItemsTabs changeTab={(value) => setTab(value)} checkedLength={checked.length} />
                     {
                         products?.length > 0 && products.map((product: PRODUCT_SCHEMA_PROPS) =>
-                            <AddProductsBox refreshCheckedProducts={() => setRefreshChecked(refreshChecked + 1)} product={product} key={product._id} openMoreInformation={() => setLoadedProduct(product)} />
+                            <AddProductsBox refreshCheckedProducts={() => setRefreshChecked(refreshChecked + 1)} product={product} key={product.id} openMoreInformation={() => setLoadedProduct(product)} />
                         )
                     }
 

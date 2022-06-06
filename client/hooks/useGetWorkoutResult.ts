@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useDailyMeasurement } from "./useDailyMeasurement"
 import { useAppSelector } from "./useRedux"
 import { reverseDateDotes } from "../utils/date.utils"
-import { is_id } from "../utils/db.utils"
+import { isid } from "../utils/db.utils"
 import { getIndexedDBbyID } from "../utils/indexedDB.utils"
 import { loadMissingDataForWorkoutResult } from "../utils/workoutResult.utils"
 
@@ -23,17 +23,17 @@ const useGetWorkoutResult = (): any => {
                     if (cache) {
                         res = [cache]
                     } else {
-                        res = daily.workout_result.filter((workout: any) => workout._id == router.query.id)
+                        res = daily.workout_result.filter((workout: any) => workout.id == router.query.id)
                         if (res?.length == 0) router.push(`/${router.query.login}/workout/results`)
                     }
                     res = loadMissingDataForWorkoutResult({
                         whenAdded: reverseDateDotes(daily.whenAdded),
                         object: res[0],
-                        workout_description: (await getIndexedDBbyID('workout_plan', res[0]?.workout_plan_ID || ''))?.description
+                        workout_description: (await getIndexedDBbyID('workout_plan', res[0]?.workout_planid || ''))?.description
                     })
                 } else {
-                    if (await is_id(router.query.id)) {
-                        res = daily.workout_result.filter((workout: any) => workout._id == router.query.id)
+                    if (await isid(router.query.id)) {
+                        res = daily.workout_result.filter((workout: any) => workout.id == router.query.id)
                         if (res?.length == 0) router.push(`/${router.query.login}/workout/results`)
                         res = loadMissingDataForWorkoutResult({ whenAdded: reverseDateDotes(daily.whenAdded), object: res[0] })
                     } else {

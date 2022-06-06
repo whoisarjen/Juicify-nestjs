@@ -38,7 +38,7 @@ const BaseDialogAddWorkoutResult = ({ children, open, setOpen, data, setWhenAdde
                         >
                             {
                                 data?.map((plan: WorkoutPlanSchemaProps) =>
-                                    <MenuItem value={plan._id} key={plan._id}>{plan.title}</MenuItem>
+                                    <MenuItem value={plan.id} key={plan.id}>{plan.title}</MenuItem>
                                 )
                             }
                         </Select>

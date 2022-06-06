@@ -14,7 +14,7 @@ const useDialogAddExercise = ({ children, skipThoseIDS, addThoseExercises }: Dia
 
     const addExercisesToWorkoutPlan = async () => {
         checked.forEach(async (x: ExerciseSchemaProps) => {
-            if (x._id) await deleteIndexedDB('checked_exercise', x._id)
+            if (x.id) await deleteIndexedDB('checked_exercise', x.id)
         })
         addThoseExercises(checked)
         setIsDialog(false)

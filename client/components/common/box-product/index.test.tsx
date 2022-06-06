@@ -11,7 +11,7 @@ let openMoreInformation: any = null;
 
 const Component = () => {
     const props = {
-        ...useBoxProduct({ product: { _id: '123', name: 'test', p: 123 }, refreshCheckedProducts: jest.fn(), openMoreInformation: jest.fn() }),
+        ...useBoxProduct({ product: { id: '123', name: 'test', p: 123 }, refreshCheckedProducts: jest.fn(), openMoreInformation: jest.fn() }),
         handleCheck: jest.fn(),
         handleLike: jest.fn(),
         openMoreInformation: jest.fn(),

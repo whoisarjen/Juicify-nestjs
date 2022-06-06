@@ -5,7 +5,7 @@ import { screen } from '@testing-library/react'
 const originalEnv = process.env;
 
 const user = {
-    _id: '123112',
+    id: '123112',
     login: 'Arjen',
     name: 'Kamil',
     surname: 'Owczarek'
@@ -28,7 +28,7 @@ describe('Testing avatar', () => {
     it('Expecting to have correct src', () => {
         const logo: any = screen.getByAltText(`${user.login} ${user.name} ${user.surname} on Juicify`)
 
-        expect(logo.src).toEqual(`${originalEnv.NEXT_PUBLIC_SERVER}/avatar/${user._id}.jpg`)
+        expect(logo.src).toEqual(`${originalEnv.NEXT_PUBLIC_SERVER}/avatar/${user.id}.jpg`)
     })
 
 })

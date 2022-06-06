@@ -9,10 +9,10 @@ self.onmessage = async ({ data: { socketUpdated, updated } }) => {
                 isNewValueInDB: socketUpdated > updated,
                 where: 'workout_plan',
                 updateDailyKey: 'workout_result',
-                updateDailyKeyLevel2: '_id',
+                updateDailyKeyLevel2: 'id',
                 updateDailyKeyLevel3: '',
                 whatToUpdate: 'workout_result',
-                whatToUpdateKey: 'workout_plan_ID',
+                whatToUpdateKey: 'workout_planid',
                 whatToUpdateKeyLevel2: '',
             });
         }

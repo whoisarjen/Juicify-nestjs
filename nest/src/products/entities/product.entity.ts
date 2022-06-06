@@ -28,7 +28,15 @@ export class Product {
 
     @Column({ type: 'real', default: 0 })
     @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
+    sugar: number;
+
+    @Column({ type: 'real', default: 0 })
+    @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
     fats: number;
+
+    @Column({ type: 'real', default: 0 })
+    @Field(() => Float, { nullable: true, description: 'Number of grams per 100g/ml' })
+    fiber: number;
 
     @Column({ type: 'int', default: null })
     @Field(() => Int, { nullable: true, description: 'Barcode' })

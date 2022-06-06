@@ -4,6 +4,8 @@ import { Consumed } from './entities/consumed.entity';
 import { CreateConsumedInput } from './dto/create-consumed.input';
 import { UpdateConsumedInput } from './dto/update-consumed.input';
 import { Ctx } from 'src/types/context.type';
+import { FindConsumedInput } from './dto/find-consumed.input';
+import { Public } from 'src/decorators/public.decorator';
 
 @Resolver(() => Consumed)
 export class ConsumedResolver {
@@ -17,14 +19,10 @@ export class ConsumedResolver {
         return this.consumedService.create(createConsumedInput, context);
     }
 
-    @Query(() => [Consumed], { name: 'consumed' })
-    findAll() {
-        return this.consumedService.findAll();
-    }
-
-    @Query(() => Consumed, { name: 'consumed' })
-    findOne(@Args('date', { type: () => Date }) date: Date) {
-        return this.consumedService.findOne(date);
+    @Public()
+    @Query(() => [Consumed], { name: 'consumed', nullable: true })
+    findOne(@Args('findConsumedInput') findConsumedInput: FindConsumedInput) {
+        return this.consumedService.findOneDay(findConsumedInput);
     }
 
     @Mutation(() => Consumed)

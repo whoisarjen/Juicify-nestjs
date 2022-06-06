@@ -61,8 +61,8 @@ const BaseWorkoutPlan = ({ t, user, token, errors, fields, append, remove, handl
                             <Stack direction="column" spacing={1} {...provided.droppableProps} ref={provided.innerRef}>
                                 {
                                     fields.map((exercise: ExerciseSchemaProps, i: number) =>
-                                        exercise._id &&
-                                        <Draggable key={exercise._id} draggableId={exercise._id} index={i}>
+                                        exercise.id &&
+                                        <Draggable key={exercise.id} draggableId={exercise.id} index={i}>
                                             {
                                                 (provided: any) => (
                                                     <Chip

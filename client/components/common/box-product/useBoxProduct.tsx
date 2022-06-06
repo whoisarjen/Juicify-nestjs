@@ -14,7 +14,7 @@ const useBoxProduct = ({ product, refreshCheckedProducts, openMoreInformation }:
     const handleLike = async () => {
         if (fav) {
             setFav(false)
-            await deleteIndexedDB('favourite_product', product._id)
+            await deleteIndexedDB('favourite_product', product.id)
         } else {
             setFav(true)
             await addIndexedDB('favourite_product', [product])
@@ -24,7 +24,7 @@ const useBoxProduct = ({ product, refreshCheckedProducts, openMoreInformation }:
     const handleCheck = async () => {
         if (checked) {
             setChecked(false)
-            await deleteIndexedDB('checked_product', product._id)
+            await deleteIndexedDB('checked_product', product.id)
         } else {
             setChecked(true)
             await addIndexedDB('checked_product', [{ ...product, how_many: value }])
@@ -34,16 +34,16 @@ const useBoxProduct = ({ product, refreshCheckedProducts, openMoreInformation }:
 
     const handleValueChange = async (value: any) => {
         setValue(value)
-        if (await getIndexedDBbyID('checked_product', product._id)) {
-            await putIndexedDB('checked_product', product._id, 'how_many', value)
+        if (await getIndexedDBbyID('checked_product', product.id)) {
+            await putIndexedDB('checked_product', product.id, 'how_many', value)
         }
         refreshCheckedProducts()
     }
 
     useEffect(() => {
         (async () => {
-            await getIndexedDBbyID('favourite_product', product._id) ? setFav(true) : setFav(false)
-            await getIndexedDBbyID('checked_product', product._id) ? setChecked(true) : setChecked(false)
+            await getIndexedDBbyID('favourite_product', product.id) ? setFav(true) : setFav(false)
+            await getIndexedDBbyID('checked_product', product.id) ? setChecked(true) : setChecked(false)
         })
     }, [])
 

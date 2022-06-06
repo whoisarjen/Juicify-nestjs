@@ -6,10 +6,10 @@ import { useEffect, useMemo } from "react";
 const DAILY_QUERY = `
     query daily ($findOneDailyInput: FindOneDailyInput!) {
         daily (findOneDailyInput: $findOneDailyInput) {
-            _id
+            id
             whenAdded
             user {
-                _id
+                id
                 login
                 numberOfMeals
                 macronutrients {
@@ -39,10 +39,10 @@ export const useDailyMeasurement = (when: string, login: string) => {
         user: response?.daily?.user,
         data: loadMissingDataForDailyMeasurement({
             whenAdded: when,
-            user_ID: token._id,
+            userid: token.id,
             object: response?.daily,
         }),
-    }), [response?.daily, token._id, when])
+    }), [response?.daily, token.id, when])
 
     useEffect(() => {
         reexecuteQuery()

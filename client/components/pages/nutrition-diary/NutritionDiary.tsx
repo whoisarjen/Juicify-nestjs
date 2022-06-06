@@ -41,7 +41,7 @@ const BaseNutritionDiary = ({ router, token, nutritionDiary, user, data }: useNu
                     <BoxMeal data={data} key={i} index={i} products={products}>
                         {
                             products.map((product: PRODUCT_SCHEMA_PROPS & ActivitySchemaProps) =>
-                                <BoxMealItem key={product._id} product={product} dailyMeasurement={data} />
+                                <BoxMealItem key={product.id} product={product} dailyMeasurement={data} />
                             )
                         }
                     </BoxMeal>

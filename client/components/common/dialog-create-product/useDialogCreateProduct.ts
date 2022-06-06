@@ -28,7 +28,7 @@ const useDialogCreateProduct = ({ children, created, defaultBarcode = 0 }: Dialo
                     delete copyValues[key as keyof typeof copyValues];
                 }
             }
-            await insertThoseIDStoDB('product', [{ ...copyValues, ...(code && { code }), user_ID: token._id }])
+            await insertThoseIDStoDB('product', [{ ...copyValues, ...(code && { code }), userid: token.id }])
             created(copyValues.name)
             success()
         } catch (e: any) {

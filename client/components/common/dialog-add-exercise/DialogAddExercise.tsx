@@ -49,7 +49,7 @@ const BaseDialogAddExercise = ({ children, isDialog, setIsDialog, find, setFind,
 
                     {
                         items?.map((item: ExerciseSchemaProps) =>
-                            <BoxExercise refreshCheckedExercises={() => setRefreshChecked(refreshChecked + 1)} exercise={item} key={item._id} />
+                            <BoxExercise refreshCheckedExercises={() => setRefreshChecked(refreshChecked + 1)} exercise={item} key={item.id} />
                         )
                     }
 

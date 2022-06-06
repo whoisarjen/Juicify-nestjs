@@ -15,13 +15,13 @@ const Component = () => {
         data: {
             items: [
                 {
-                    '_id': '123',
+                    'id': '123',
                     'login': 'Arjen',
                     'name': 'Kamil',
                     'surname': 'Owczarek'
                 },
                 {
-                    '_id': '1234',
+                    'id': '1234',
                     'login': 'test',
                     'name': 'Preetini',
                     'surname': 'Kuna'

@@ -22,9 +22,9 @@ const BaseWorkoutPlans = ({ data, router, token, createWorkoutPlan, user, t }: u
                     <BoxWorkout
                         title={plan.title}
                         description={plan.description}
-                        route={`/${router.query.login}/workout/plans/${plan._id}`}
+                        route={`/${router.query.login}/workout/plans/${plan.id}`}
                         type={1}
-                        key={plan._id}
+                        key={plan.id}
                     />
                 )
             }

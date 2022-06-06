@@ -10,7 +10,7 @@ export default () => ({
     POSTGRES_DB: 'juicify',
     MONGODB_STRING: process.env.MONGODB_STRING,
     CORS: {
-        origin: 'http://localhost',
+        origin: 'http://localhost:3000',
         credentials: true,
     },
     TOKEN_NAME: 'token',

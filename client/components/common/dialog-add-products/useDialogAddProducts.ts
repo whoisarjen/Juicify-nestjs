@@ -43,9 +43,9 @@ const useDialogAddProducts = ({ children, index, dailyMeasurement }: DialogAddPr
         const time = new Date().getTime()
         array.map(async (x: PRODUCT_SCHEMA_PROPS, i: number) => {
             x.meal = meal
-            x.product_ID = x._id
-            x._id = 'XD' + time + i
-            await deleteIndexedDB('checked_product', x.product_ID)
+            x.productid = x.id
+            x.id = 'XD' + time + i
+            await deleteIndexedDB('checked_product', x.productid)
             return x
         })
         setChecked([])

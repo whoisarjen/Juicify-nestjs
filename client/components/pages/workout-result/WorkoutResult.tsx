@@ -1,7 +1,7 @@
 import TextField from '@mui/material/TextField';
 import { ValueSchemaProps } from '../../../schema/workoutResult.schema';
 import { reverseDateDotes } from '../../../utils/date.utils';
-import { is_id } from '../../../utils/db.utils';
+import { isid } from '../../../utils/db.utils';
 import BottomFlyingGuestBanner from '../../common/banner-guest-bottom';
 import Navbar from '../../common/navbar-workout'
 import ButtonMoreOptionsWorkoutResult from '../../common/button-more-options-workout-result';
@@ -52,7 +52,7 @@ const BaseWorkoutResult = ({ t, isLoading, handleSubmit, onSubmit, deleteEveryth
                 />
             }
             {
-                !(async () => await is_id(router.query.id)) &&
+                !(async () => await isid(router.query.id)) &&
                 <TextField
                     variant="outlined"
                     label={t("Burnt")}
@@ -80,9 +80,9 @@ const BaseWorkoutResult = ({ t, isLoading, handleSubmit, onSubmit, deleteEveryth
 
             {
                 fields.map((result: any, index: number) =>
-                    <div style={fields.length == (index + 1) ? { marginBottom: '100px' } : {}} key={(result._id || '') + index}>
+                    <div style={fields.length == (index + 1) ? { marginBottom: '100px' } : {}} key={(result.id || '') + index}>
                         <ResultBox
-                            key={(result._id || '') + index}
+                            key={(result.id || '') + index}
                             result={result}
                             isOwner={token?.login == router?.query?.login}
                             setNewValues={(values: Array<ValueSchemaProps>) => updateResults({ values, result, index })}

@@ -3,14 +3,15 @@ import { useMutation, useQuery } from 'urql';
 import { PRODUCT_SCHEMA_PROPS } from '../schema/product.schema';
 
 const PRODUCT = `
-    _id
+    id
     name
-    p
-    c
-    f
-    updatedAt
+    proteins
+    carbs
+    sugar
+    fats
+    fiber
     user {
-        _id
+        id
         login
     }
 `
@@ -32,9 +33,9 @@ const CREATE_PRODUCT = `
 `;
 
 const REMOVE_PRODUCT = `
-    mutation removeProduct($_id: String!){
-        removeProduct(_id: $_id){
-            _id
+    mutation removeProduct($id: String!){
+        removeProduct(id: $id){
+            id
         }
     }
 `
@@ -75,8 +76,8 @@ const useProducts = () => {
         fetching: fetching || loading,
         error,
         findProducts: (find: string) => setFind(find),
-        createProduct: (createProductInput: Omit<PRODUCT_SCHEMA_PROPS, '_id'>) => createProduct({ createProductInput }),
-        removeProduct: (_id: string) => removeProduct({ _id }),
+        createProduct: (createProductInput: Omit<PRODUCT_SCHEMA_PROPS, 'id'>) => createProduct({ createProductInput }),
+        removeProduct: (id: string) => removeProduct({ id }),
     }
 }
 

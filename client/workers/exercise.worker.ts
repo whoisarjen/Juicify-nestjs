@@ -10,10 +10,10 @@ self.onmessage = async ({ data: { socketUpdated, updated } }) => {
                 where: 'exercise',
                 updateDailyKey: 'workout_result',
                 updateDailyKeyLevel2: 'results',
-                updateDailyKeyLevel3: '_id',
+                updateDailyKeyLevel3: 'id',
                 whatToUpdate: 'workout_plan',
                 whatToUpdateKey: 'exercises',
-                whatToUpdateKeyLevel2: '_id',
+                whatToUpdateKeyLevel2: 'id',
             });
             await cleanCache('checked_exercise')
         }

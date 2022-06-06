@@ -67,7 +67,7 @@ const CheckingWeekData = ({ setStep }: ChooseDietProps) => {
                                 data &&
                                 data.length &&
                                 data.map((x: DailyMeasurementSchemaProps) =>
-                                    <tr key={x._id}>
+                                    <tr key={x.id}>
                                         <td>{reverseDateDotes(x.whenAdded)}</td>
                                         <td>{x.weight}kg</td>
                                     </tr>

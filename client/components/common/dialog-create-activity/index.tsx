@@ -23,7 +23,7 @@ const DialogCreateActivity = ({ children, data }: { children: any, data: DailyMe
         if (values.activity || values.calories) {
             let object: DailyMeasurementSchemaProps = { ...data }
             object.nutrition_diary.push({
-                _id: 'XD' + new Date().getTime(),
+                id: 'XD' + new Date().getTime(),
                 ...(values.activity && { activity: values.activity }),
                 ...(values.calories && { calories: -values.calories })
             })

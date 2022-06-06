@@ -9,10 +9,10 @@ self.onmessage = async ({ data: { socketUpdated, updated } }) => {
                 isNewValueInDB: socketUpdated > updated,
                 where: 'product',
                 updateDailyKey: 'nutrition_diary',
-                updateDailyKeyLevel2: 'product_ID',
+                updateDailyKeyLevel2: 'productid',
                 updateDailyKeyLevel3: '',
                 whatToUpdate: 'favourite_product',
-                whatToUpdateKey: '_id',
+                whatToUpdateKey: 'id',
                 whatToUpdateKeyLevel2: '',
             });
             await cleanCache('checked_product')

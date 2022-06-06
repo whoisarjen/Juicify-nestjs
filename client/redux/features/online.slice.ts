@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    isOnline: false
+    isOnline: true
 };
 
 export const onlineSlice = createSlice({

@@ -2,7 +2,7 @@ import axios from "axios";
 import { refreshKey } from "../redux/features/key.slice";
 import { store } from "../redux/store";
 import { createOneFromTwo } from "./dailyMeasurement.utils";
-import { deleteThoseIDSfromDB, insertThoseIDStoDB, is_id, overwriteThoseIDSinDB } from "./db.utils";
+import { deleteThoseIDSfromDB, insertThoseIDStoDB, isid, overwriteThoseIDSinDB } from "./db.utils";
 import { addIndexedDB, deleteIndexedDB, getAllIndexedDB, putIndexedDB } from "./indexedDB.utils";
 
 export const synchronizationController = async (
@@ -16,7 +16,7 @@ export const synchronizationController = async (
         if (whereArray.length) {
             for (let i = 0; i < whereArray.length; i++) {
                 if (!whereArray[i].notSAVED) {
-                    if (!(await is_id(whereArray[i]._id))) {
+                    if (!(await isid(whereArray[i].id))) {
                         inserted.push(whereArray[i])
                     }
                     if (whereArray[i].deleted) {
@@ -67,12 +67,12 @@ export const synchronizationController = async (
                 if (inserted && inserted.length) {
                     for (let i = 0; i < inserted.length; i++) {
                         for (let i = 0; i < inserted.length; i++) {
-                            await deleteIndexedDB(where, inserted[i][where == 'daily_measurement' ? 'whenAdded' : '_id']) // Can't be connected above
+                            await deleteIndexedDB(where, inserted[i][where == 'daily_measurement' ? 'whenAdded' : 'id']) // Can't be connected above
                             await addIndexedDB(where, [inserted[i]])
                         }
                         if (isNewValueInDB) {
                             for (let a = data.length - 1; a >= 0; a--) {
-                                if (inserted[i]._id == data[a]._id) {
+                                if (inserted[i].id == data[a].id) {
                                     data.splice(a, 1)
                                     break;
                                 }
@@ -83,12 +83,12 @@ export const synchronizationController = async (
                 if (changed && changed.length) {
                     for (let i = 0; i < changed.length; i++) {
                         for (let i = 0; i < changed.length; i++) {
-                            await deleteIndexedDB(where, changed[i][where == 'daily_measurement' ? 'whenAdded' : '_id']) // Can't be connected above
+                            await deleteIndexedDB(where, changed[i][where == 'daily_measurement' ? 'whenAdded' : 'id']) // Can't be connected above
                             await addIndexedDB(where, [changed[i]])
                         }
                         if (isNewValueInDB) {
                             for (let a = data.length - 1; a >= 0; a--) {
-                                if (changed[i]._id == data[a]._id) {
+                                if (changed[i].id == data[a].id) {
                                     data.splice(a, 1)
                                     break;
                                 }
@@ -99,12 +99,12 @@ export const synchronizationController = async (
                 if (deleted && deleted.length) {
                     for (let i = 0; i < deleted.length; i++) {
                         for (let i = 0; i < deleted.length; i++) {
-                            await deleteIndexedDB(where, deleted[i][where == 'daily_measurement' ? 'whenAdded' : '_id']) // Can't be connected above
+                            await deleteIndexedDB(where, deleted[i][where == 'daily_measurement' ? 'whenAdded' : 'id']) // Can't be connected above
                             await addIndexedDB(where, [deleted[i]])
                         }
                         if (isNewValueInDB) {
                             for (let a = data.length - 1; a >= 0; a--) {
-                                if (deleted[i]._id == data[a]._id) {
+                                if (deleted[i].id == data[a].id) {
                                     data.splice(a, 1)
                                     break;
                                 }
@@ -114,7 +114,7 @@ export const synchronizationController = async (
                 }
                 if (isNewValueInDB && data.length) {
                     for (let a = 0; a < data.length; a++) {
-                        await deleteIndexedDB(where, data[a][where == 'daily_measurement' ? 'whenAdded' : '_id'])
+                        await deleteIndexedDB(where, data[a][where == 'daily_measurement' ? 'whenAdded' : 'id'])
                     }
                     await addIndexedDB(where, data)
                 }
@@ -136,7 +136,7 @@ export const cleanCache = async (where: string) => {
     const cache = await getAllIndexedDB(where)
     if (cache && cache.length) {
         for (let i = 0; i < cache.length; i++) {
-            await deleteIndexedDB(where, cache[i]._id)
+            await deleteIndexedDB(where, cache[i].id)
         }
     }
     return true;
@@ -153,14 +153,14 @@ export const handleUpdateDailyKey = async ({ updateDailyKey, updateDailyKeyLevel
                     for (let b = 0; b < dailyArray[a][updateDailyKey].length; b++) {
                         if (!updateDailyKeyLevel3) {
                             if (dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2] == arrayIDSbeforeInsert[i]) {
-                                dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2] = array[i]._id
+                                dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2] = array[i].id
                                 checker = true;
                             }
                         } else {
                             if (dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2] && dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2].length) {
                                 for (let c = 0; c < dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2].length; c++) {
                                     if (dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2][c][updateDailyKeyLevel3] == arrayIDSbeforeInsert[i]) {
-                                        dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2][c][updateDailyKeyLevel3] = array[i]._id
+                                        dailyArray[a][updateDailyKey][b][updateDailyKeyLevel2][c][updateDailyKeyLevel3] = array[i].id
                                         checker = true;
                                     }
                                 }
@@ -188,20 +188,20 @@ export const handleUpdateKey = async ({ whatToUpdate, whatToUpdateKey, whatToUpd
                     let count = false;
                     if (!whatToUpdateKeyLevel2) {
                         if (cache[a][whatToUpdateKey] == arrayIDSbeforeInsert[i]) {
-                            await putIndexedDB(whatToUpdate, cache[a]._id, whatToUpdateKey, array[i]._id)
+                            await putIndexedDB(whatToUpdate, cache[a].id, whatToUpdateKey, array[i].id)
                         }
                     } else {
                         if (cache[a][whatToUpdateKey] && cache[a][whatToUpdateKey].length) {
                             for (let b = 0; b < cache[a][whatToUpdateKey].length; b++) {
                                 if (cache[a][whatToUpdateKey][b][whatToUpdateKeyLevel2] == arrayIDSbeforeInsert[i]) {
-                                    cache[a][whatToUpdateKey][b][whatToUpdateKeyLevel2] = array[i]._id
+                                    cache[a][whatToUpdateKey][b][whatToUpdateKeyLevel2] = array[i].id
                                     count = true;
                                 }
                             }
                         }
                     }
                     if (count) {
-                        await deleteIndexedDB(whatToUpdate, cache[a]._id)
+                        await deleteIndexedDB(whatToUpdate, cache[a].id)
                         await addIndexedDB(whatToUpdate, [cache[a]])
                     }
                 }

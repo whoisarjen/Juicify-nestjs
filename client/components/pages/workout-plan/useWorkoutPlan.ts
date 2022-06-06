@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { useForm, useFieldArray } from "react-hook-form"
 import { useAppSelector } from "../../../hooks/useRedux"
 import { WorkoutPlanSchemaProps, WorkoutPlanSchema } from "../../../schema/workoutPlan.schema"
-import { is_id, deleteThoseIDSfromDB, insertThoseIDStoDBController } from "../../../utils/db.utils"
+import { isid, deleteThoseIDSfromDB, insertThoseIDStoDBController } from "../../../utils/db.utils"
 import { deleteIndexedDB } from "../../../utils/indexedDB.utils"
 import useGetWorkoutPlan from "../../../hooks/useGetWorkoutPlan"
 
@@ -19,10 +19,10 @@ const useWorkoutPlan = () => {
     const deleteWorkoutPlan = async () => {
         try {
             setIsLoading(true)
-            if (!await is_id(router.query.id)) {
+            if (!await isid(router.query.id)) {
                 await deleteIndexedDB('workout_plan', router.query.id)
             } else {
-                await deleteThoseIDSfromDB('workout_plan', [{ _id: router.query.id }])
+                await deleteThoseIDSfromDB('workout_plan', [{ id: router.query.id }])
             }
             router.push(`/${token.login}/workout/plans`)
         } finally {
@@ -40,7 +40,7 @@ const useWorkoutPlan = () => {
         try {
             setIsLoading(true)
             await insertThoseIDStoDBController('workout_plan', [{
-                _id: router.query.id,
+                id: router.query.id,
                 ...(values.title && values.title.trim() && { title: values.title.trim() }),
                 ...(values.description && values.description.trim() && { description: values.description.trim() }),
                 ...(values.burnt && { burnt: values.burnt }),

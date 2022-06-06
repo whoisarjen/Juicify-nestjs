@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 let push: any = null;
 
 const Component = () => {
-    const props = useBottomFlyingGuestBanner({ user: { _id: '', login: 'Test' } })
+    const props = useBottomFlyingGuestBanner({ user: { id: '', login: 'Test' } })
 
     push = jest.spyOn(props.router, 'push')
 

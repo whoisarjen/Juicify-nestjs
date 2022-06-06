@@ -7,7 +7,7 @@ import { refreshKey } from "../redux/features/key.slice"
 import { handleUpdateDailyKey, handleUpdateKey } from "./synchronization.utils"
 
 export const insertThoseIDStoDBController = async (where: string, array: Array<any>) => {
-    if (await is_id(array[0]._id)) {
+    if (await isid(array[0].id)) {
         await overwriteThoseIDSinDB(where, array)
     } else {
         await insertThoseIDStoDB(where, array)
@@ -22,10 +22,10 @@ export const insertThoseIDStoDB = async (where: string, sentArray: Array<any>, u
         if (!getOnline() && !await isWorker()) throw 'User is offline. Skip to catch method';
 
         for (let i = 0; i < array.length; i++) {
-            if (array[i]._id) {
-                await deleteIndexedDB(where, array[i][where == 'daily_measurement' ? 'whenAdded' : '_id'])
-                arrayIDSbeforeInsert.push(array[i]._id)
-                delete array[i]._id
+            if (array[i].id) {
+                await deleteIndexedDB(where, array[i][where == 'daily_measurement' ? 'whenAdded' : 'id'])
+                arrayIDSbeforeInsert.push(array[i].id)
+                delete array[i].id
             }
             if (where == 'daily_measurement') {
                 array[i].whenAdded = new Date(array[i].whenAdded).toISOString()
@@ -50,7 +50,7 @@ export const insertThoseIDStoDB = async (where: string, sentArray: Array<any>, u
 
         console.log(error)
         for (let i = 0; i < array.length; i++) {
-            array[i]._id = arrayIDSbeforeInsert[i] || ("XD" + new Date().getTime() + i)
+            array[i].id = arrayIDSbeforeInsert[i] || ("XD" + new Date().getTime() + i)
             array[i].whenAdded = new Date(array[i].whenAdded).toISOString()
         }
         if (!await isWorker()) {
@@ -97,7 +97,7 @@ export const overwriteThoseIDSinDB = async (where: string, sentArray: Array<any>
 
     } finally {
         for (let i = 0; i < array.length; i++) {
-            await deleteIndexedDB(where, array[i][where == 'daily_measurement' ? 'whenAdded' : '_id']) // Can't be connected above
+            await deleteIndexedDB(where, array[i][where == 'daily_measurement' ? 'whenAdded' : 'id']) // Can't be connected above
         }
         await addIndexedDB(where, array)
         if (!await isWorker()) store.dispatch(refreshKey(where)) // Worker is doing it by self, when all operactions are done, so we avoid multi reloads
@@ -113,8 +113,8 @@ export const deleteThoseIDSfromDB = async (where: string, array: Array<any>) => 
 
         for (let i = 0; i < array.length; i++) {
             array[i].deleted = true;
-            if (!await is_id(array[i]._id)) {
-                await deleteIndexedDB(where, array[i]._id)
+            if (!await isid(array[i].id)) {
+                await deleteIndexedDB(where, array[i].id)
                 array.splice(i, 1)
             } else if (where == 'daily_measurement') {
                 array[i] = await prepareToSend(array[i], true)
@@ -126,7 +126,7 @@ export const deleteThoseIDSfromDB = async (where: string, array: Array<any>) => 
         await axios.post(`${process.env.NEXT_PUBLIC_SERVER}/delete/${where}`, { array }, { withCredentials: true });
 
         for (let i = 0; i < array.length; i++) {
-            await deleteIndexedDB(where, array[i]._id)
+            await deleteIndexedDB(where, array[i].id)
         }
 
     } catch (error: any) {
@@ -146,7 +146,7 @@ export const deleteThoseIDSfromDB = async (where: string, array: Array<any>) => 
     }
 }
 
-export const is_id = async (_id: string) => (_id).substring(0, 2) != "XD" ? true : false;
+export const isid = async (id: string) => (id).substring(0, 2) != "XD" ? true : false;
 
 export const isWorker = async () => {
     try {

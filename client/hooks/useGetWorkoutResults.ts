@@ -39,7 +39,7 @@ const useGetWorkoutResults = (): useGetWorkoutResultsResponseProps => {
                         for (let a = 0; a < cache.length; a++) {
                             let checker = false;
                             for (let i = 0; i < results.length; i++) {
-                                if (cache[a]._id == results[i]._id) {
+                                if (cache[a].id == results[i].id) {
                                     results[i] = { ...cache[a], notSaved: new Date().getTime() }
                                     checker = true;
                                     break;

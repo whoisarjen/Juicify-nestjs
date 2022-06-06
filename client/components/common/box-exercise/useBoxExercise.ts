@@ -10,7 +10,7 @@ const useBoxExercise = ({ exercise, refreshCheckedExercises }: BoxExerciseProps)
     const handleCheck = async () => {
         if (checked) {
             setChecked(false)
-            if (exercise._id) await deleteIndexedDB('checked_exercise', exercise._id)
+            if (exercise.id) await deleteIndexedDB('checked_exercise', exercise.id)
         } else {
             setChecked(true)
             await addIndexedDB('checked_exercise', [exercise])
@@ -20,8 +20,8 @@ const useBoxExercise = ({ exercise, refreshCheckedExercises }: BoxExerciseProps)
 
     useEffect(() => {
         (async () => {
-            if (exercise._id) {
-                await getIndexedDBbyID('checked_exercise', exercise._id) ? setChecked(true) : setChecked(false)
+            if (exercise.id) {
+                await getIndexedDBbyID('checked_exercise', exercise.id) ? setChecked(true) : setChecked(false)
             }
         })()
     }, [])

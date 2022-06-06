@@ -9,7 +9,7 @@ export const ValueSchema = object({
 export type ValueSchemaProps = TypeOf<typeof ValueSchema>
 
 export const ResultSchema = object({
-    _id: string().optional(),
+    id: string().optional(),
     name: string().optional(),
     values: array(ValueSchema),
 })
@@ -17,9 +17,9 @@ export const ResultSchema = object({
 export type ResultSchemaProps = TypeOf<typeof ResultSchema>
 
 export const WorkoutResultSchema = object({
-    _id: string().optional(),
-    user_ID: string().optional(),
-    workout_plan_ID: string().optional(),
+    id: string().optional(),
+    userid: string().optional(),
+    workout_planid: string().optional(),
     title: string().optional(),
     // whenAdded: string().optional(),
     description: string().optional(),

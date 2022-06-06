@@ -43,7 +43,7 @@ const TopNotify = () => {
             }
             setTimer(setTimeout(() => setAllowed(true), 1500))
         })()
-    }, [router.pathname, token._id])
+    }, [router.pathname, token.id])
 
     useEffect(() => {
         document.addEventListener("visibilitychange", () => {
@@ -67,7 +67,7 @@ const TopNotify = () => {
                         !router.pathname.includes('workout/results')
                         ?
                         (
-                            <BetterLink href={`/${token.login}/workout/results/${notSaved[0].whenAdded}/${notSaved[0]._id}`}>
+                            <BetterLink href={`/${token.login}/workout/results/${notSaved[0].whenAdded}/${notSaved[0].id}`}>
                                 <Box>{t('Comeback to not saved workout')}</Box>
                             </BetterLink>
                         )
@@ -75,7 +75,7 @@ const TopNotify = () => {
                         offlineBar
                             ?
                             (
-                                !isOnline && token && token._id
+                                !isOnline && token && token.id
                                     ?
                                     (
                                         <Box>{t('YOU_ARE_WORKING_IN_OFFLINE_MODE')}</Box>

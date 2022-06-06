@@ -11,9 +11,9 @@ const prepareItems = async (data: Array<any>, skipThoseIDS: Array<any>, where: s
         let newData: Array<any> = data.concat(my)
         if (my.length > 0) {
             newData = newData.filter((item: any) => item.name.toLowerCase().includes(value)).map((x: any) => {
-                if (!x.user_ID) x.user_ID = '0'
+                if (!x.userid) x.userid = '0'
                 return x
-            }).sort((a: any, b: any) => b.user_ID.localeCompare(a.user_ID) || a.name.length - b.name.length || a.name.localeCompare(b.name));
+            }).sort((a: any, b: any) => b.userid.localeCompare(a.userid) || a.name.length - b.name.length || a.name.localeCompare(b.name));
 
             if (newData.length > 10) {
                 newData = newData.splice(0, 10)
@@ -22,7 +22,7 @@ const prepareItems = async (data: Array<any>, skipThoseIDS: Array<any>, where: s
         if (skipThoseIDS && skipThoseIDS.length > 0 && newData.length > 0) {
             for (let i = 0; i < skipThoseIDS.length; i++) {
                 for (let a = 0; a < newData.length; a++) {
-                    if (skipThoseIDS[i]._id == newData[a]._id) {
+                    if (skipThoseIDS[i].id == newData[a].id) {
                         newData.splice(a, 1)
                         break;
                     }
@@ -61,7 +61,7 @@ const useFind = (value: any, where: string, tab: number, skipThoseIDS: Array<any
                         setLoading(false)
                     } else {
                         if (cache) {
-                            await deleteIndexedDB(`cache_${where}`, cache._id)
+                            await deleteIndexedDB(`cache_${where}`, cache.id)
                         }
                         const searchFunction = (find: string) => setTimeout(async () => {
                             setLoading(true);
@@ -70,7 +70,7 @@ const useFind = (value: any, where: string, tab: number, skipThoseIDS: Array<any
                                     const response: any = await post({ object: { find }, url: `/find/${where}s` })
                                     const receivedProducts = response.data.items.sort((a: any, b: any) => a.name.length - b.name.length)
                                     setItems(await prepareItems(receivedProducts || [], skipThoseIDS, where, value))
-                                    await addIndexedDB(`cache_${where}`, [{ _id: find, whenAdded: new Date(), items: receivedProducts }])
+                                    await addIndexedDB(`cache_${where}`, [{ id: find, whenAdded: new Date(), items: receivedProducts }])
                                     setSearchCache([...searchCache, find])
                                 } catch (e: any) {
                                     setItems(await prepareItems([], skipThoseIDS, where, value))
@@ -92,7 +92,7 @@ const useFind = (value: any, where: string, tab: number, skipThoseIDS: Array<any
 
     useEffect(() => {
         (async () => {
-            setSearchCache((await getAllIndexedDB(`cache_${where}`)).map((item: any) => item._id))
+            setSearchCache((await getAllIndexedDB(`cache_${where}`)).map((item: any) => item.id))
         })()
     }, [])
 

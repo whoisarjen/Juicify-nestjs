@@ -26,9 +26,9 @@ const BaseWorkoutResults = ({ token, router, data, user }: useWorkoutResultsProp
                         isNotSaved={result.notSaved}
                         title={result.title}
                         description={result.description}
-                        route={`/${router.query.login}/workout/results/${result.whenAdded}/${result._id}`}
+                        route={`/${router.query.login}/workout/results/${result.whenAdded}/${result.id}`}
                         type={0}
-                        key={result._id}
+                        key={result.id}
                     />
                 )
             }

@@ -10,7 +10,7 @@ import useCommon from "../../../hooks/useCommon";
 const CREATE_USER = `
     mutation createUser ($createUserInput: CreateUserInput!) {
         createUser (createUserInput: $createUserInput) {
-            _id
+            id
         }
     }
 `;

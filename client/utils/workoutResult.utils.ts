@@ -8,9 +8,9 @@ interface loadMissingDataForWorkoutResultProps {
 
 export const loadMissingDataForWorkoutResult = ({ whenAdded, object, workout_description = '' }: loadMissingDataForWorkoutResultProps) => {
     return {
-        ...(object?._id && ({ _id: object._id } || { _id: 'XD' + new Date().getTime() })),
-        ...(object?.user_ID && ({ user_ID: object.user_ID } || { user_ID: '' })),
-        ...(object?.workout_plan_ID && ({ workout_plan_ID: object.workout_plan_ID } || { workout_plan_ID: '' })),
+        ...(object?.id && ({ id: object.id } || { id: 'XD' + new Date().getTime() })),
+        ...(object?.userid && ({ userid: object.userid } || { userid: '' })),
+        ...(object?.workout_planid && ({ workout_planid: object.workout_planid } || { workout_planid: '' })),
         ...(object?.title && ({ title: object.title } || { title: '' })),
         // ...(object?.whenAdded && ({ whenAdded: object.whenAdded } || { whenAdded })),
         ...(object?.description && ({ description: object.description } || { description: '' })),
@@ -22,9 +22,9 @@ export const loadMissingDataForWorkoutResult = ({ whenAdded, object, workout_des
 
 export const prepareWorkoutResultToSend = (object: WorkoutResultSchemaProps) => {
     return {
-        ...(object?._id?.trim() && { _id: object?._id?.trim() }),
-        ...(object?.user_ID?.trim() && { user_ID: object?.user_ID?.trim() }),
-        ...(object?.workout_plan_ID?.trim() && { workout_plan_ID: object?.workout_plan_ID?.trim() }),
+        ...(object?.id?.trim() && { id: object?.id?.trim() }),
+        ...(object?.userid?.trim() && { userid: object?.userid?.trim() }),
+        ...(object?.workout_planid?.trim() && { workout_planid: object?.workout_planid?.trim() }),
         ...(object?.title?.trim() && { title: object?.title?.trim() }),
         // // // ...(object?.whenAdded?.trim() && { whenAdded: object?.whenAdded?.trim() }),
         ...(object?.description?.trim() && { description: object?.description?.trim() }),

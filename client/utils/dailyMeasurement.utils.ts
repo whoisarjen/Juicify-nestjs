@@ -1,28 +1,28 @@
 import { store } from "../redux/store";
 import { DailyMeasurementSchemaProps } from "../schema/dailyMeasurement.schema";
 import { addDaysToDate } from "./date.utils";
-import { is_id } from "./db.utils";
+import { isid } from "./db.utils";
 import { deleteIndexedDB } from "./indexedDB.utils";
 import { v4 } from "uuid";
 
 interface loadMissingDataForDailyMeasurementProps {
-    user_ID: string,
+    userid: string,
     whenAdded: string,
     object?: any
 }
 
-export const loadMissingDataForDailyMeasurement = ({ user_ID, whenAdded, object = {} }: loadMissingDataForDailyMeasurementProps) => {
+export const loadMissingDataForDailyMeasurement = ({ userid, whenAdded, object = {} }: loadMissingDataForDailyMeasurementProps) => {
     return {
-        ...(object?._id ? { _id: object._id } : { _id: 'XD' + v4() }),
+        ...(object?.id ? { id: object.id } : { id: 'XD' + v4() }),
         ...(object?.weight ? { weight: object.weight } : { weight: 0 }),
-        ...(object?.user?._id ? { user_ID: object.user._id } : { user_ID }),
+        ...(object?.user?.id ? { userid: object.user.id } : { userid }),
         ...(object?.whenAdded ? { whenAdded: object.whenAdded } : { whenAdded }),
         ...(object?.nutrition_diary ? { nutrition_diary: object.nutrition_diary } : { nutrition_diary: [] }),
         ...(object?.workout_result ? { workout_result: object.workout_result } : { workout_result: [] }),
     }
 }
 
-export const loadMissingDays = async (oryginalArray: Array<DailyMeasurementSchemaProps> = [], user_ID: string, howManyDays: number, today: Date | string) => {
+export const loadMissingDays = async (oryginalArray: Array<DailyMeasurementSchemaProps> = [], userid: string, howManyDays: number, today: Date | string) => {
     let newArray = []
     let checkingDate = JSON.parse(JSON.stringify(new Date(today)))
     let array = JSON.parse(JSON.stringify(oryginalArray))
@@ -46,7 +46,7 @@ export const loadMissingDays = async (oryginalArray: Array<DailyMeasurementSchem
     for (let i = 0; i < howManyDays; i++) {
         newArray.push(
             loadMissingDataForDailyMeasurement({
-                ...{ _id: "XD" + new Date().getTime() + i, user_ID, whenAdded: checkingDate },
+                ...{ id: "XD" + new Date().getTime() + i, userid, whenAdded: checkingDate },
                 object: object[checkingDate]
             })
         );
@@ -57,15 +57,15 @@ export const loadMissingDays = async (oryginalArray: Array<DailyMeasurementSchem
 
 export const prepareToSend = async (daily_measurement: any, removeDeleted: boolean = false) => {
     const object = JSON.parse(JSON.stringify(daily_measurement))
-    if (object._id && !await is_id(object._id)) {
-        delete object._id
+    if (object.id && !await isid(object.id)) {
+        delete object.id
     }
     if (object.nutrition_diary && object.nutrition_diary.length > 0) {
         for (let i = object.nutrition_diary.length - 1; i >= 0; i--) {
             if (removeDeleted && object.nutrition_diary[i].deleted) {
                 object.nutrition_diary.splice(i, 1)
-            } else if (object.nutrition_diary[i]._id && !await is_id(object.nutrition_diary[i]._id)) {
-                delete object.nutrition_diary[i]._id
+            } else if (object.nutrition_diary[i].id && !await isid(object.nutrition_diary[i].id)) {
+                delete object.nutrition_diary[i].id
             }
         }
     }
@@ -73,8 +73,8 @@ export const prepareToSend = async (daily_measurement: any, removeDeleted: boole
         for (let i = object.workout_result.length - 1; i >= 0; i--) {
             if (removeDeleted && object.workout_result[i].deleted) {
                 object.workout_result.splice(i, 1)
-            } else if (object.workout_result[i]._id && !await is_id(object.workout_result[i]._id)) {
-                delete object.workout_result[i]._id
+            } else if (object.workout_result[i].id && !await isid(object.workout_result[i].id)) {
+                delete object.workout_result[i].id
             }
         }
     }
@@ -98,7 +98,7 @@ export const prepareToSend = async (daily_measurement: any, removeDeleted: boole
 export const createOneFromTwo = async (callbackObject: any, secondObject: any) => {
     let changed = JSON.parse(JSON.stringify(callbackObject))
     let isDataAlreadyInIndexedDB = JSON.parse(JSON.stringify(secondObject))
-    if (!changed._id && isDataAlreadyInIndexedDB._id) changed._id = isDataAlreadyInIndexedDB._id
+    if (!changed.id && isDataAlreadyInIndexedDB.id) changed.id = isDataAlreadyInIndexedDB.id
     if (isDataAlreadyInIndexedDB.weight && !changed.weight) changed.weight = isDataAlreadyInIndexedDB.weight
     if (isDataAlreadyInIndexedDB.weight_description && !changed.weight_description) changed.weight_description = isDataAlreadyInIndexedDB.weight_description
     if (isDataAlreadyInIndexedDB.neck && !changed.neck) changed.neck = isDataAlreadyInIndexedDB.neck
@@ -117,11 +117,11 @@ export const createOneFromTwo = async (callbackObject: any, secondObject: any) =
         if (changed.nutrition_diary.length) {
             for (let a = 0; a < changed.nutrition_diary.length; a++) {
                 if (changed.nutrition_diary[a].deleted) {
-                    isDataAlreadyInIndexedDB.nutrition_diary = isDataAlreadyInIndexedDB.nutrition_diary.filter((x: any) => x._id != changed.nutrition_diary[a]._id)
-                } else if (!await is_id(changed.nutrition_diary[a]._id)) {
+                    isDataAlreadyInIndexedDB.nutrition_diary = isDataAlreadyInIndexedDB.nutrition_diary.filter((x: any) => x.id != changed.nutrition_diary[a].id)
+                } else if (!await isid(changed.nutrition_diary[a].id)) {
                     isDataAlreadyInIndexedDB.nutrition_diary.push(changed.nutrition_diary[a])
                 } else if (changed.nutrition_diary[a].changed) {
-                    const indexNumber = isDataAlreadyInIndexedDB.nutrition_diary.findIndex((x: any) => x._id == changed.nutrition_diary[a]._id)
+                    const indexNumber = isDataAlreadyInIndexedDB.nutrition_diary.findIndex((x: any) => x.id == changed.nutrition_diary[a].id)
                     if (parseInt(indexNumber) >= 0) {
                         isDataAlreadyInIndexedDB.nutrition_diary[indexNumber] = changed.nutrition_diary[a]
                     }
@@ -137,11 +137,11 @@ export const createOneFromTwo = async (callbackObject: any, secondObject: any) =
         if (changed.workout_result.length.length) {
             for (let a = 0; a < changed.workout_result.length; a++) {
                 if (changed.workout_result[a].deleted) {
-                    isDataAlreadyInIndexedDB.workout_result = isDataAlreadyInIndexedDB.workout_result.filter((x: any) => x._id != changed.workout_result[a]._id)
-                } else if (!await is_id(changed.workout_result[a]._id)) {
+                    isDataAlreadyInIndexedDB.workout_result = isDataAlreadyInIndexedDB.workout_result.filter((x: any) => x.id != changed.workout_result[a].id)
+                } else if (!await isid(changed.workout_result[a].id)) {
                     isDataAlreadyInIndexedDB.workout_result.push(changed.workout_result[a])
                 } else if (changed.workout_result[a].changed) {
-                    const indexNumber = isDataAlreadyInIndexedDB.workout_result.findIndex((x: any) => x._id == changed.workout_result[a]._id)
+                    const indexNumber = isDataAlreadyInIndexedDB.workout_result.findIndex((x: any) => x.id == changed.workout_result[a].id)
                     if (parseInt(indexNumber) >= 0) {
                         isDataAlreadyInIndexedDB.workout_result[indexNumber] = changed.workout_result[a]
                     }

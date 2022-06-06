@@ -18,7 +18,7 @@ const useDialogAddWorkoutResult = ({ children }: { children: any }) => {
 
     const DialogAddWorkoutResult = async () => {
         if (data && data.length) {
-            const workoutPlan: WorkoutPlanSchemaProps[] = data.filter((workout: WorkoutPlanSchemaProps) => workout._id === workoutPlanID)
+            const workoutPlan: WorkoutPlanSchemaProps[] = data.filter((workout: WorkoutPlanSchemaProps) => workout.id === workoutPlanID)
             const createdID = 'XD' + new Date().getTime()
             let whenAddedChanged = new Date(whenAdded).toJSON().slice(0, 10)
             await addIndexedDB(
@@ -28,8 +28,8 @@ const useDialogAddWorkoutResult = ({ children }: { children: any }) => {
                     ...{
                         description: '',
                         whenAdded: whenAddedChanged,
-                        workout_plan_ID: workoutPlan[0]._id,
-                        _id: createdID,
+                        workout_planid: workoutPlan[0].id,
+                        id: createdID,
                         results: workoutPlan[0]?.exercises ? workoutPlan[0].exercises.map((exercise: any) => {
                             return {
                                 ...exercise,
@@ -46,8 +46,8 @@ const useDialogAddWorkoutResult = ({ children }: { children: any }) => {
     }
 
     useEffect(() => {
-        if (data && data[0]?._id) {
-            setWorkoutPlanID(data[0]._id || '')
+        if (data && data[0]?.id) {
+            setWorkoutPlanID(data[0].id || '')
         }
     }, [data])
 

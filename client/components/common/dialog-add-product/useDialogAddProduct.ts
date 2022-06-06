@@ -18,10 +18,10 @@ const useDialogAddProduct = ({ children, dailyMeasurement, defaultMeal = 0, load
             let object: any = { ...dailyMeasurement }
             object.nutrition_diary.push({
                 ...loadedProduct,
-                "_id": 'XD' + new Date().getTime(),
+                "id": 'XD' + new Date().getTime(),
                 "meal": meal,
                 "how_many": howMany,
-                "product_ID": loadedProduct._id
+                "productid": loadedProduct.id
             })
             await insertThoseIDStoDBController('daily_measurement', [object])
         }

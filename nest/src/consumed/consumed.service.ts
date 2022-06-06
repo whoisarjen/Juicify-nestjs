@@ -6,12 +6,16 @@ import { UpdateConsumedInput } from './dto/update-consumed.input';
 import { Consumed } from './entities/consumed.entity';
 import { get } from 'lodash'
 import { Ctx } from 'src/types/context.type';
+import { FindConsumedInput } from './dto/find-consumed.input';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ConsumedService {
     constructor(
         @InjectRepository(Consumed)
-        private consumedsRepository: Repository<Consumed>
+        private consumedsRepository: Repository<Consumed>,
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
     ) { }
 
     async create(createConsumedInput: CreateConsumedInput, context: Ctx) {
@@ -29,18 +33,28 @@ export class ConsumedService {
                 id: created.id
             },
             relations: {
-                user: true,
                 product: true,
             },
         });
     }
 
-    findAll() {
-        return `This action returns all consumed`;
-    }
+    async findOneDay({ login, date }: FindConsumedInput) {
+        const user = await this.usersRepository.findOne({
+            where: {
+                login,
+            }
+        })
 
-    findOne(date: Date) {
-        return `This action returns a #${date} consumed`;
+        return await this.consumedsRepository.find({
+            where: {
+                date,
+                user: user.id as any,
+            },
+            relations: {
+                user: true,
+                product: true,
+            },
+        });
     }
 
     update(id: number, updateConsumedInput: UpdateConsumedInput) {

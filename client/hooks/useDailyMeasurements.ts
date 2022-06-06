@@ -21,7 +21,7 @@ const useDailyMeasurements = (today: Date | string, howManyDays: number = 7, log
     //         if (login) {
     //             if (token.login == (login || token.login)) { // Sometimes need to use only in token's user case and this block errors
     //                 let res = await getAllIndexedDB('daily_measurement')
-    //                 res = await loadMissingDays(res, token._id, howManyDays, today)
+    //                 res = await loadMissingDays(res, token.id, howManyDays, today)
     //                 setData(res)
     //                 setUser(token)
     //             } else {
@@ -31,7 +31,7 @@ const useDailyMeasurements = (today: Date | string, howManyDays: number = 7, log
     //                     login.toString()
     //                 );
     //                 setUser(res.user)
-    //                 res = await loadMissingDays(res.data, res.user._id, howManyDays, today)
+    //                 res = await loadMissingDays(res.data, res.user.id, howManyDays, today)
     //                 setData(res)
     //             }
     //         }

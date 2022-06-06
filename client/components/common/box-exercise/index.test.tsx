@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 require("fake-indexeddb/auto");
 
 const exercise = {
-    _id: '123',
+    id: '123',
     name: 'test_exercise',
     l: 13
 }
