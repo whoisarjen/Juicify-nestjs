@@ -6,5 +6,5 @@ export class ConfirmRefreshPasswordInput {
     email: string
 
     @Field(() => String, { description: 'Refresh password token' })
-    refreshPasswordToken: string
+    refresh_password_token: string
 }

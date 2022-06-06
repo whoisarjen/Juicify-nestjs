@@ -16,7 +16,7 @@ export class ProductsService {
 
     async create(createProductInput: CreateProductInput, context: Ctx) {
         const user = get(context.req.user, 'id')
-        
+
         const created = await this.productsRepository.create({
             ...createProductInput,
             user,

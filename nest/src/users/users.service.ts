@@ -25,7 +25,7 @@ export class UsersService {
     ) {}
 
     async create(createUserInput: CreateUserInput) {
-        const confirmationToken = nanoid(this.configService.get('NANOID_SIZE'))
+        const confirmation_token = nanoid(this.configService.get('NANOID_SIZE'))
 
         const user = await this.usersRepository.findOne({
             where: [
@@ -43,7 +43,7 @@ export class UsersService {
 
         const created = await this.usersRepository.create({
             ...createUserInput,
-            confirmationToken,
+            confirmation_token,
         })
 
         await this.usersRepository.save(created);
@@ -51,11 +51,11 @@ export class UsersService {
         return created;
     }
 
-    async confirm({ email, confirmationToken }: ConfirmUserInput) {
+    async confirm({ email, confirmation_token }: ConfirmUserInput) {
         const user = await this.usersRepository.findOne({
             where: {
                 email,
-                confirmationToken,
+                confirmation_token,
             }
         })
 
@@ -64,7 +64,7 @@ export class UsersService {
         }
 
         this.usersRepository.update(user.id, {
-            isConfirmed: true,
+            is_confirmed: true,
         })
 
         return user;
@@ -83,13 +83,13 @@ export class UsersService {
         if (
             !user ||
             (!(await user.comparePassword(password)) && !isRefresh) ||
-            (session_time && session_time < user.killTokenOlderThan)
+            (session_time && session_time < user.kill_token_older_than)
         ) {
             await this.logout(context)
             throw new NotFoundException()
         }
 
-        if (!user.isConfirmed) {
+        if (!user.is_confirmed) {
             await this.logout(context)
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
@@ -97,7 +97,7 @@ export class UsersService {
             }, HttpStatus.FORBIDDEN);
         }
 
-        if (user.isBanned) {
+        if (user.is_banned) {
             await this.logout(context)
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
@@ -164,27 +164,27 @@ export class UsersService {
             throw new NotFoundException()
         }
 
-        const refreshPasswordToken = nanoid(32)
+        const refresh_password_token = nanoid(32)
 
         await this.usersRepository.update(user.id, {
-            refreshPasswordToken
+            refresh_password_token
         })
 
         // await this.mailerService.sendMail({
         //     to: user.email,
         //     subject: 'Confirm reset password',
-        //     text: refreshPasswordToken,
-        //     html: refreshPasswordToken,
+        //     text: refresh_password_token,
+        //     html: refresh_password_token,
         // })
 
         return null
     }
 
-    async confirmRefreshPassword({ email, refreshPasswordToken }: ConfirmRefreshPasswordInput) {
+    async confirmRefreshPassword({ email, refresh_password_token }: ConfirmRefreshPasswordInput) {
         const user = await this.usersRepository.findOne({
             where: {
                 email: email,
-                refreshPasswordToken: refreshPasswordToken,
+                refresh_password_token: refresh_password_token,
             }
         })
 

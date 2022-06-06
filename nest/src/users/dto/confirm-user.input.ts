@@ -6,5 +6,5 @@ export class ConfirmUserInput {
   email: string
 
   @Field(() => String, { description: 'Confirmation token' })
-  confirmationToken: string
+  confirmation_token: string
 }

@@ -13,16 +13,16 @@ type User {
   sex: Boolean!
 
   """Number of meals of user"""
-  numberOfMeals: Int!
+  number_of_meals: Int!
 
   """Is user an Admin"""
-  isAdmin: Boolean!
+  is_admin: Boolean!
 
   """Is profile public"""
-  isPublic: Boolean!
+  is_public: Boolean!
 
   """Is account banned"""
-  isBanned: Boolean!
+  is_banned: Boolean!
 
   """Height"""
   height: Int!
@@ -58,28 +58,91 @@ type User {
   coach: DateTime!
 
   """Is user while dieting"""
-  isCoachAnalyze: Boolean!
+  is_coach_analyze: Boolean!
 
   """Is water adder available"""
-  isWaterAdder: Boolean!
+  is_water_adder: Boolean!
 
   """Is workout watch available"""
-  isWorkoutWatch: Boolean!
+  is_workout_watch: Boolean!
 
   """Is user doing extra activity"""
-  isSportActive: Boolean!
+  is_sport_active: Boolean!
 
   """What kind of diet user prefer"""
-  kindOfDiet: Int!
+  kind_of_diet: Int!
 
   """Level of activity"""
-  activityLevel: Int!
+  activity_level: Int!
 
   """Gram of fiber per day"""
   fiber: Int!
 
   """% of carbs as sugar"""
   carbsPercentAsSugar: Int!
+
+  """Grams of proteins per day"""
+  proteins_day_0: Int!
+
+  """Grams of carbs per day"""
+  carbs_day_0: Int!
+
+  """Grams of fats per day"""
+  fats_day_0: Int!
+
+  """Grams of proteins per day"""
+  proteins_day_1: Int!
+
+  """Grams of carbs per day"""
+  carbs_day_1: Int!
+
+  """Grams of fats per day"""
+  fats_day_1: Int!
+
+  """Grams of proteins per day"""
+  proteins_day_2: Int!
+
+  """Grams of carbs per day"""
+  carbs_day_2: Int!
+
+  """Grams of fats per day"""
+  fats_day_2: Int!
+
+  """Grams of proteins per day"""
+  proteins_day_3: Int!
+
+  """Grams of carbs per day"""
+  carbs_day_3: Int!
+
+  """Grams of fats per day"""
+  fats_day_3: Int!
+
+  """Grams of proteins per day"""
+  proteins_day_4: Int!
+
+  """Grams of carbs per day"""
+  carbs_day_4: Int!
+
+  """Grams of fats per day"""
+  fats_day_4: Int!
+
+  """Grams of proteins per day"""
+  proteins_day_5: Int!
+
+  """Grams of carbs per day"""
+  carbs_day_5: Int!
+
+  """Grams of fats per day"""
+  fats_day_5: Int!
+
+  """Grams of proteins per day"""
+  proteins_day_6: Int!
+
+  """Grams of carbs per day"""
+  carbs_day_6: Int!
+
+  """Grams of fats per day"""
+  fats_day_6: Int!
 
   """Placeholder allowing to query for token, while login"""
   token: String
@@ -172,7 +235,7 @@ input ConfirmRefreshPasswordInput {
   email: String!
 
   """Refresh password token"""
-  refreshPasswordToken: String!
+  refresh_password_token: String!
 }
 
 input FindProductsInput {
@@ -222,7 +285,7 @@ input ConfirmUserInput {
   email: String!
 
   """Confirmation token"""
-  confirmationToken: String!
+  confirmation_token: String!
 }
 
 input CreateProductInput {

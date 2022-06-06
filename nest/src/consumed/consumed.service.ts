@@ -41,7 +41,7 @@ export class ConsumedService {
     async findOneDay({ login, date }: FindConsumedInput, context: Ctx) {
         const user = get(context.req.user, 'id')
 
-        const { id, isPublic } = await this.usersRepository.findOne({
+        const { id, is_public } = await this.usersRepository.findOne({
             where: {
                 login,
             }
@@ -51,7 +51,7 @@ export class ConsumedService {
             throw new NotFoundException()
         }
 
-        if (!isPublic && id !== user.id) {
+        if (!is_public && id !== user.id) {
             throw new ForbiddenException()
         }
 

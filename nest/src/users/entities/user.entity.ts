@@ -12,10 +12,10 @@ export class User {
     id: number;
 
     @Column({ type: 'char', length: 32 })
-    confirmationToken: string
+    confirmation_token: string
 
     @Column({ type: 'bool', default: false })
-    isConfirmed: boolean
+    is_confirmed: boolean
 
     @Column({ length: 255 })
     email: string
@@ -29,10 +29,10 @@ export class User {
     password: string
 
     @Column({ type: 'timestamp', default: new Date() })
-    killTokenOlderThan: Date
+    kill_token_older_than: Date
 
     @Column({ type: 'char', length: 32, default: null })
-    refreshPasswordToken?: string
+    refresh_password_token?: string
 
     @Column({ type: 'bool' })
     @Field(() => Boolean, { description: 'Sex of user' })
@@ -40,19 +40,19 @@ export class User {
 
     @Column({ type: 'smallint', default: 5 })
     @Field(() => Int, { description: 'Number of meals of user' })
-    numberOfMeals: number
+    number_of_meals: number
 
     @Column({ type: 'bool', default: false })
     @Field(() => Boolean, { description: 'Is user an Admin' })
-    isAdmin: boolean
+    is_admin: boolean
 
     @Column({ type: 'bool', default: true })
     @Field(() => Boolean, { description: 'Is profile public' })
-    isPublic: boolean
+    is_public: boolean
 
     @Column({ type: 'bool', default: false })
     @Field(() => Boolean, { description: 'Is account banned' })
-    isBanned: boolean
+    is_banned: boolean
 
     @Column({ type: 'smallint' })
     @Field(() => Int, { description: 'Height' })
@@ -102,33 +102,33 @@ export class User {
     // coach_analyze
     @Column({ type: 'bool', default: false })
     @Field(() => Boolean, { description: 'Is user while dieting' })
-    isCoachAnalyze: boolean
+    is_coach_analyze: boolean
 
     // water_adder
     @Column({ type: 'bool', default: true })
     @Field(() => Boolean, { description: 'Is water adder available' })
-    isWaterAdder: boolean
+    is_water_adder: boolean
 
     // workout_watch
     @Column({ type: 'bool', default: true })
     @Field(() => Boolean, { description: 'Is workout watch available' })
-    isWorkoutWatch: boolean
+    is_workout_watch: boolean
 
     // sport_active
     @Column({ type: 'bool', default: false })
     @Field(() => Boolean, { description: 'Is user doing extra activity' })
-    isSportActive: boolean
+    is_sport_active: boolean
 
     // kind_of_diet
     // Can be new class basiclly or enum
     @Column({ type: 'smallint', default: 0 })
     @Field(() => Int, { description: 'What kind of diet user prefer' })
-    kindOfDiet: number
+    kind_of_diet: number
 
     // activity
     @Column({ type: 'smallint', default: 1 })
     @Field(() => Int, { description: 'Level of activity' })
-    activityLevel: number
+    activity_level: number
 
     @Column({ type: 'smallint', default: 25 })
     @Field(() => Int, { description: 'Gram of fiber per day' })
@@ -139,13 +139,93 @@ export class User {
     @Field(() => Int, { description: '% of carbs as sugar' })
     carbsPercentAsSugar: number
 
-    // @Column()
-    // @Field(() => [Macronutrients], { description: 'Macronutrients' })
-    // macronutrients: [Macronutrients]
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of proteins per day' })
+    proteins_day_0: number
 
-	@CreateDateColumn() createdAt: Date
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of carbs per day' })
+    carbs_day_0: number
 
-	@UpdateDateColumn() updatedAt: Date
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of fats per day' })
+    fats_day_0: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of proteins per day' })
+    proteins_day_1: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of carbs per day' })
+    carbs_day_1: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of fats per day' })
+    fats_day_1: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of proteins per day' })
+    proteins_day_2: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of carbs per day' })
+    carbs_day_2: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of fats per day' })
+    fats_day_2: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of proteins per day' })
+    proteins_day_3: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of carbs per day' })
+    carbs_day_3: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of fats per day' })
+    fats_day_3: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of proteins per day' })
+    proteins_day_4: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of carbs per day' })
+    carbs_day_4: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of fats per day' })
+    fats_day_4: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of proteins per day' })
+    proteins_day_5: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of carbs per day' })
+    carbs_day_5: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of fats per day' })
+    fats_day_5: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of proteins per day' })
+    proteins_day_6: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of carbs per day' })
+    carbs_day_6: number
+
+    @Column({ type: 'smallint', default: 0 })
+    @Field(() => Int, { description: 'Grams of fats per day' })
+    fats_day_6: number
+
+	@CreateDateColumn() created: Date
+
+	@UpdateDateColumn() updated: Date
 
     @Field(() => String, { nullable: true, description: 'Placeholder allowing to query for token, while login' })
     token?: string
