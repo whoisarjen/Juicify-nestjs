@@ -4,13 +4,14 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import SidebarLeft from './SidebarLeft'
 import SidebarRight from './SidebarRight'
-import { useAppSelector } from '../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import SidebarRightLoggouted from './SidebarRightLoggouted'
 import SidebarLeftLoggouted from './SidebarLeftLoggouted'
 import TopNotify from './TopNotify'
 import { getShortDate } from '../../utils/date.utils'
 import styled from 'styled-components'
 import { getCookie, isBrowserValid } from '../../utils/auth.utils'
+import { setToken } from '../../redux/features/token.slice'
 
 const Grid = styled.div`
     margin: auto;
@@ -66,6 +67,11 @@ const Layout = ({ children }: { children: any }) => {
     const router = useRouter()
     const [isAllowedLocation, setIsAllowedLocation] = useState(false)
     const token: any = useAppSelector(state => state.token.value)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        if (localStorage.getItem('token')) dispatch(setToken(localStorage.getItem('token')))
+    }, [dispatch])
 
     useEffect(() => {
         (async () => {
