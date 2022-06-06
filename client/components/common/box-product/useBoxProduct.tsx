@@ -45,7 +45,7 @@ const useBoxProduct = ({ product, refreshCheckedProducts, openMoreInformation }:
             await getIndexedDBbyID('favourite_product', product.id) ? setFav(true) : setFav(false)
             await getIndexedDBbyID('checked_product', product.id) ? setChecked(true) : setChecked(false)
         })
-    }, [product.id])
+    }, [])
 
     return { product, openMoreInformation, getTheme, value, handleValueChange, checked, handleCheck, handleLike, fav, t }
 }

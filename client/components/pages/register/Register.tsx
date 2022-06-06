@@ -19,9 +19,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CreateUserSchema, CreateUserSchemaProps } from "../../../schema/user.schema";
 import { useNotify } from "../../../hooks/useNotify";
+import { useMutation } from "urql";
 import { omit } from "lodash";
 import useCommon from "../../../hooks/useCommon";
-import useUrqlMutation from "../../../hooks/useUrqlMutation";
+import WrapperGraphQLError from "../../../containers/WrapperGraphQLError/WrapperGraphQLError";
 
 const CREATE_USER = `
     mutation createUser ($createUserInput: CreateUserInput!) {
@@ -51,7 +52,7 @@ const BaseRegister = () => {
     const { t, router } = useCommon()
     const { success, error } = useNotify()
     const [date, setDate] = useState(new Date())
-    const [{ fetching }, createUser] = useUrqlMutation(CREATE_USER);
+    const [{ fetching, error: errorResponse }, createUser] = useMutation(CREATE_USER);
 
     const { register, formState: { errors }, handleSubmit, setValue } = useForm<CreateUserSchemaProps>({
         resolver: zodResolver(CreateUserSchema)
@@ -62,121 +63,125 @@ const BaseRegister = () => {
             return error('ACCEPT_RULES');
         }
 
-        const response = await createUser({
+        await createUser({
             createUserInput: omit(
                 createUserInput,
                 ['passwordConfirmation', 'rules']
             )
         })
-
-        if (response) {
-            success('CHECK_YOUR_EMAIL')
-            router.push(`/login`);
-        }
+            .then(result => {
+                if (result.error) {
+                    return
+                }
+                success('CHECK_YOUR_EMAIL')
+                router.push(`/login`);
+            })
     }
 
     return (
-        <Form onSubmit={handleSubmit(registerUser)}>
-            <LogoWrapper>
-                <Logo size={180} />
-            </LogoWrapper>
-            <Stack direction="column" spacing={2}>
-                <TextField
-                    variant="outlined"
-                    label={t("auth:LOGIN")}
-                    type="text"
-                    {...register('login')}
-                    error={typeof errors.login === 'undefined' ? false : true}
-                    helperText={errors.login?.message && t(`notify:${errors.login.message || ''}`)}
-                />
-                <TextField
-                    type="email"
-                    variant="outlined"
-                    label={t("auth:EMAIL")}
-                    {...register('email')}
-                    error={typeof errors.email === 'undefined' ? false : true}
-                    helperText={errors.email?.message && t(`notify:${errors.email.message || ''}`)}
-                />
-                <TextField
-                    type="password"
-                    variant="outlined"
-                    label={t("auth:PASSWORD")}
-                    {...register('password')}
-                    data-testid="password"
-                    error={typeof errors.password === 'undefined' ? false : true}
-                    helperText={errors.password?.message && t(`notify:${errors.password.message || ''}`)}
-                />
-                <TextField
-                    type="password"
-                    variant="outlined"
-                    label={t("auth:PASSWORD_CONFIRMATION")}
-                    {...register('passwordConfirmation')}
-                    data-testid="confirmation"
-                    error={typeof errors.passwordConfirmation === 'undefined' ? false : true}
-                    helperText={errors.passwordConfirmation?.message && t(`notify:${errors.passwordConfirmation.message || ''}`)}
-                />
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DesktopDatePicker
-                        {...register('birth')}
-                        label={t("auth:BIRTH")}
-                        value={date}
-                        onChange={(newValue: any) => {
-                            setDate(newValue);
-                            setValue('birth', newValue)
-                        }}
-                        renderInput={(params: any) => <TextField {...params} />}
+        <WrapperGraphQLError message={errorResponse?.message}>
+            <Form onSubmit={handleSubmit(registerUser)}>
+                <LogoWrapper>
+                    <Logo size={180} />
+                </LogoWrapper>
+                <Stack direction="column" spacing={2}>
+                    <TextField
+                        variant="outlined"
+                        label={t("auth:LOGIN")}
+                        type="text"
+                        {...register('login')}
+                        error={typeof errors.login === 'undefined' ? false : true}
+                        helperText={errors.login?.message && t(`notify:${errors.login.message || ''}`)}
                     />
-                </LocalizationProvider>
-                <TextField
-                    type="Number"
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                    variant="outlined"
-                    label={t("auth:HEIGHT")}
-                    {...register('height')}
-                    error={typeof errors.height === 'undefined' ? false : true}
-                    helperText={errors.height?.message && t(`notify:${errors.height.message || ''}`)}
-                />
-                <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">{t("auth:SEX")}</InputLabel>
-                    <Select
-                        {...register('sex')}
-                        label={t("auth:SEX")}
-                        defaultValue="true"
-                        data-testid="sex"
+                    <TextField
+                        type="email"
+                        variant="outlined"
+                        label={t("auth:EMAIL")}
+                        {...register('email')}
+                        error={typeof errors.email === 'undefined' ? false : true}
+                        helperText={errors.email?.message && t(`notify:${errors.email.message || ''}`)}
+                    />
+                    <TextField
+                        type="password"
+                        variant="outlined"
+                        label={t("auth:PASSWORD")}
+                        {...register('password')}
+                        data-testid="password"
+                        error={typeof errors.password === 'undefined' ? false : true}
+                        helperText={errors.password?.message && t(`notify:${errors.password.message || ''}`)}
+                    />
+                    <TextField
+                        type="password"
+                        variant="outlined"
+                        label={t("auth:PASSWORD_CONFIRMATION")}
+                        {...register('passwordConfirmation')}
+                        data-testid="confirmation"
+                        error={typeof errors.passwordConfirmation === 'undefined' ? false : true}
+                        helperText={errors.passwordConfirmation?.message && t(`notify:${errors.passwordConfirmation.message || ''}`)}
+                    />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
+                            {...register('birth')}
+                            label={t("auth:BIRTH")}
+                            value={date}
+                            onChange={(newValue: any) => {
+                                setDate(newValue);
+                                setValue('birth', newValue)
+                            }}
+                            renderInput={(params: any) => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>
+                    <TextField
+                        type="Number"
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        variant="outlined"
+                        label={t("auth:HEIGHT")}
+                        {...register('height')}
+                        error={typeof errors.height === 'undefined' ? false : true}
+                        helperText={errors.height?.message && t(`notify:${errors.height.message || ''}`)}
+                    />
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">{t("auth:SEX")}</InputLabel>
+                        <Select
+                            {...register('sex')}
+                            label={t("auth:SEX")}
+                            defaultValue="true"
+                            data-testid="sex"
+                        >
+                            <MenuItem value="true">{t("auth:MAN")}</MenuItem>
+                            <MenuItem value="false">{t("auth:WOMAN")}</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <DialogRules>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    {...register('rules')}
+                                />
+                            }
+                            label={t('auth:I_AM_ACCEPTING_RULES')}
+                        />
+                    </DialogRules>
+                    <LoadingButton
+                        loading={fetching}
+                        variant="contained"
+                        type="submit"
+                        onClick={handleSubmit(registerUser)}
                     >
-                        <MenuItem value="true">{t("auth:MAN")}</MenuItem>
-                        <MenuItem value="false">{t("auth:WOMAN")}</MenuItem>
-                    </Select>
-                </FormControl>
-                <DialogRules>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                {...register('rules')}
-                            />
-                        }
-                        label={t('auth:I_AM_ACCEPTING_RULES')}
-                    />
-                </DialogRules>
-                <LoadingButton
-                    loading={fetching}
-                    variant="contained"
-                    type="submit"
-                    onClick={handleSubmit(registerUser)}
-                >
-                    {t("auth:REGISTER")}
-                </LoadingButton>
-            </Stack>
-            <Link passHref href="/login">
-                <LoadingButton
-                    color="success"
-                    style={{ margin: 'auto 0' }}
-                    variant="contained"
-                >
-                    {t("auth:ONE_OF_US_SIGN_IN")}
-                </LoadingButton>
-            </Link>
-        </Form>
+                        {t("auth:REGISTER")}
+                    </LoadingButton>
+                </Stack>
+                <Link passHref href="/login">
+                    <LoadingButton
+                        color="success"
+                        style={{ margin: 'auto 0' }}
+                        variant="contained"
+                    >
+                        {t("auth:ONE_OF_US_SIGN_IN")}
+                    </LoadingButton>
+                </Link>
+            </Form>
+        </WrapperGraphQLError>
     );
 };
 
