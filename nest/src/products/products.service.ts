@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { Ctx } from 'src/types/context.type';
 import { get } from 'lodash'
-const fs = require('fs');
+
 @Injectable()
 export class ProductsService {
     constructor(
