@@ -21,8 +21,11 @@ export class ConsumedResolver {
 
     @Public()
     @Query(() => [Consumed], { name: 'consumed', nullable: true })
-    findOne(@Args('findConsumedInput') findConsumedInput: FindConsumedInput) {
-        return this.consumedService.findOneDay(findConsumedInput);
+    findOne(
+        @Args('findConsumedInput') findConsumedInput: FindConsumedInput,
+        @Context() context: Ctx,
+    ) {
+        return this.consumedService.findOneDay(findConsumedInput, context);
     }
 
     @Mutation(() => Consumed)

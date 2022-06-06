@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConsumedInput } from './dto/create-consumed.input';
@@ -38,8 +38,10 @@ export class ConsumedService {
         });
     }
 
-    async findOneDay({ login, date }: FindConsumedInput) {
-        const user = await this.usersRepository.findOne({
+    async findOneDay({ login, date }: FindConsumedInput, context: Ctx) {
+        const user = get(context.req.user, 'id')
+
+        const { id, isPublic } = await this.usersRepository.findOne({
             where: {
                 login,
             }
@@ -49,10 +51,14 @@ export class ConsumedService {
             throw new NotFoundException()
         }
 
+        if (!isPublic && id !== user.id) {
+            throw new ForbiddenException()
+        }
+
         const test = await this.consumedsRepository.find({
             where: {
                 date,
-                user: user.id as any,
+                user: id as any,
             },
             relations: {
                 user: true,

@@ -32,7 +32,6 @@ export class ProductsService {
                 user: true,
             },
         });
-        return user
     }
 
     async findAll({ name }: FindProductsInput) {
