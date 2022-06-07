@@ -58,9 +58,9 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                             fullWidth
                             variant="standard"
                             label={t('Proteins')}
-                            {...register('p')}
-                            error={typeof errors.p === 'undefined' ? false : true}
-                            helperText={errors.p?.message && t(`notify:${errors.p.message || ''}`)}
+                            {...register('proteins')}
+                            error={typeof errors.proteins === 'undefined' ? false : true}
+                            helperText={errors.proteins?.message && t(`notify:${errors.proteins.message || ''}`)}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -72,9 +72,9 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                             fullWidth
                             variant="standard"
                             label={t('Carbs')}
-                            {...register('c')}
-                            error={typeof errors.c === 'undefined' ? false : true}
-                            helperText={errors.c?.message && t(`notify:${errors.c.message || ''}`)}
+                            {...register('carbs')}
+                            error={typeof errors.carbs === 'undefined' ? false : true}
+                            helperText={errors.carbs?.message && t(`notify:${errors.carbs.message || ''}`)}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -86,9 +86,9 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                             fullWidth
                             variant="standard"
                             label={t('Sugar')}
-                            {...register('s')}
-                            error={typeof errors.s === 'undefined' ? false : true}
-                            helperText={errors.s?.message && t(`notify:${errors.s.message || ''}`)}
+                            {...register('sugar')}
+                            error={typeof errors.sugar === 'undefined' ? false : true}
+                            helperText={errors.sugar?.message && t(`notify:${errors.sugar.message || ''}`)}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -100,9 +100,9 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                             fullWidth
                             variant="standard"
                             label={t('Fats')}
-                            {...register('f')}
-                            error={typeof errors.f === 'undefined' ? false : true}
-                            helperText={errors.f?.message && t(`notify:${errors.f.message || ''}`)}
+                            {...register('fats')}
+                            error={typeof errors.fats === 'undefined' ? false : true}
+                            helperText={errors.fats?.message && t(`notify:${errors.fats.message || ''}`)}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -114,9 +114,9 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                             fullWidth
                             variant="standard"
                             label={t('Fiber')}
-                            {...register('fi')}
-                            error={typeof errors.fi === 'undefined' ? false : true}
-                            helperText={errors.fi?.message && t(`notify:${errors.fi.message || ''}`)}
+                            {...register('fiber')}
+                            error={typeof errors.fiber === 'undefined' ? false : true}
+                            helperText={errors.fiber?.message && t(`notify:${errors.fiber.message || ''}`)}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -128,9 +128,9 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                             fullWidth
                             variant="standard"
                             label={t('Salt')}
-                            {...register('na')}
-                            error={typeof errors.na === 'undefined' ? false : true}
-                            helperText={errors.na?.message && t(`notify:${errors.na.message || ''}`)}
+                            {...register('salt')}
+                            error={typeof errors.salt === 'undefined' ? false : true}
+                            helperText={errors.salt?.message && t(`notify:${errors.salt.message || ''}`)}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">{t('g in 100g/ml')}</InputAdornment>,
                             }}
@@ -152,7 +152,7 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                         <FormControlLabel
                             control={
                                 <Switch
-                                    {...register('checkMe')}
+                                    {...register('is_expecting_check')}
                                 />
                             }
                             label={t('Should be available for all?')}

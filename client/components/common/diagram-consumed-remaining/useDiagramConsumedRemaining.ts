@@ -26,11 +26,11 @@ const useDiagramConsumedRemaining = ({ array, user }: DiagramConsumedRemainingPr
                 if (meal.length) {
                     meal.forEach((product: PRODUCT_SCHEMA_PROPS) => {
                         if (product && product.how_many) {
-                            if (product.p) o['Proteins']['value'] += product.p * product.how_many
-                            if (product.c) o['Carbs']['value'] += product.c * product.how_many
-                            if (product.s) o['Sugar']['value'] += product.s * product.how_many
-                            if (product.f) o['Fats']['value'] += product.f * product.how_many
-                            if (product.fi) o['Fiber']['value'] += product.fi * product.how_many
+                            if (product.proteins) o['Proteins']['value'] += product.proteins * product.how_many
+                            if (product.carbs) o['Carbs']['value'] += product.carbs * product.how_many
+                            if (product.sugar) o['Sugar']['value'] += product.sugar * product.how_many
+                            if (product.fats) o['Fats']['value'] += product.fats * product.how_many
+                            if (product.fiber) o['Fiber']['value'] += product.fiber * product.how_many
                         }
                     })
                 }

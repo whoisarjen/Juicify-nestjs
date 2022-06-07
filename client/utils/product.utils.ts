@@ -53,13 +53,13 @@ export const getCalories = (object: getCaloriesProps) => {
 }
 
 export const getMacronutrient = (object: getCaloriesProps, macronutrient: string) => {
-    if (macronutrient == 'p') {
+    if (macronutrient == 'proteins') {
         return (object.proteins || 0) * (object.how_many || 1)
     }
-    if (macronutrient == 'c') {
+    if (macronutrient == 'carbs') {
         return (object.carbs || 0) * (object.how_many || 1)
     }
-    if (macronutrient == 'f') {
+    if (macronutrient == 'fats') {
         return (object.fats || 0) * (object.how_many || 1)
     }
 

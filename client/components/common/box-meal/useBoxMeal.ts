@@ -9,15 +9,15 @@ const useBoxMeal = ({ children, index, products, data }: BoxMealProps) => {
     const { t } = useTranslation('nutrition-diary');
     const router: any = useRouter();
     const token: any = useAppSelector((state) => state.token.value);
-    const [macro, setMacro] = useState({ p: 0, c: 0, f: 0 })
+    const [macro, setMacro] = useState({ proteins: 0, carbs: 0, fats: 0 })
 
     useEffect(() => {
-        let countmacro = { p: 0, c: 0, f: 0 }
+        let countmacro = { proteins: 0, carbs: 0, fats: 0 }
         products.forEach(product => {
             countmacro = {
-                p: (countmacro.p + getMacronutrient(product, 'p')),
-                c: (countmacro.c + getMacronutrient(product, 'c')),
-                f: (countmacro.f + getMacronutrient(product, 'f'))
+                proteins: (countmacro.proteins + getMacronutrient(product, 'proteins')),
+                carbs: (countmacro.carbs + getMacronutrient(product, 'carbs')),
+                fats: (countmacro.fats + getMacronutrient(product, 'fats'))
             }
         })
         setMacro(countmacro)
