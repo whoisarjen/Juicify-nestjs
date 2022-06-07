@@ -5,11 +5,12 @@ import { useNotify } from "./useNotify";
 interface UseUrqlQueryProps {
 	query: string
 	pause?: boolean
+	defaultVariables?: any
 }
 
-const useUrqlQuery = ({ query, pause = false }: UseUrqlQueryProps) => {
+const useUrqlQuery = ({ query, pause = false, defaultVariables = null }: UseUrqlQueryProps) => {
 	const { error: errorNotify } = useNotify()
-	const [variables, setVariables] = useState({})
+	const [variables, setVariables] = useState(defaultVariables)
 	const [{ data, fetching, error }, reexecuteQuery] = useQuery({
 		query,
 		pause,
@@ -21,7 +22,7 @@ const useUrqlQuery = ({ query, pause = false }: UseUrqlQueryProps) => {
 	}, [reexecuteQuery, variables])
 
 	useEffect(() => {
-		error?.message && errorNotify(error.message.replace('[GraphQL] ', ''))
+		error?.message && variables !== null && errorNotify(error.message.replace('[GraphQL] ', ''))
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [error?.message])
 
