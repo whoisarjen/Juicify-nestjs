@@ -44,6 +44,7 @@ const BaseLogin = () => {
     const { dispatchToken } = useToken()
     const [{ data, fetching }, login] = useUrqlQuery({
         query: LOGIN,
+        pause: true,
     });
 
     const { register, formState: { errors }, handleSubmit } = useForm<CreateSessionSchemaProps>({
