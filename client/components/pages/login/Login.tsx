@@ -61,7 +61,7 @@ const BaseLogin = () => {
     }, [data, dispatchToken, router])
 
     return (
-        <Form onSubmit={handleSubmit(login)}>
+        <Form onSubmit={handleSubmit(loginUserInput => login({ loginUserInput }))}>
             <LogoWrapper>
                 <Logo size={180} />
             </LogoWrapper>
