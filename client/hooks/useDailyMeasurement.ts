@@ -2,6 +2,7 @@ import { loadMissingDataForDailyMeasurement } from "../utils/dailyMeasurement.ut
 import { useQuery } from "urql";
 import useCommon from "./useCommon";
 import { useEffect, useMemo } from "react";
+import useConsumed from "./useConsumed";
 
 const DAILY_QUERY = `
     query daily ($findOneDailyInput: FindOneDailyInput!) {
@@ -23,34 +24,28 @@ const DAILY_QUERY = `
 `
 
 export const useDailyMeasurement = (when: string, login: string) => {
-    const { token, router } = useCommon()
+    const { router }: any = useCommon()
+    const { data, fetching, error, findDay } = useConsumed()
 
-    const [{ data: response, fetching, error }, reexecuteQuery] = useQuery({
-        query: DAILY_QUERY,
-        variables: {
-            findOneDailyInput: {
-                login: login || router.query.login,
-                whenAdded: when || router.query.date,
-            }
-        }
-    })
-
-    const { data, user } = useMemo(() => ({
-        user: response?.daily?.user,
-        data: loadMissingDataForDailyMeasurement({
-            whenAdded: when,
-            userid: token.id,
-            object: response?.daily,
-        }),
-    }), [response?.daily, token.id, when])
+    // const { data, user } = useMemo(() => ({
+    //     user: response?.daily?.user,
+    //     data: loadMissingDataForDailyMeasurement({
+    //         whenAdded: when,
+    //         userid: token.id,
+    //         object: response?.daily,
+    //     }),
+    // }), [response?.daily, token.id, when])
 
     useEffect(() => {
-        reexecuteQuery()
-    }, [reexecuteQuery, router.query.login, router.query.whenAdded])
-
+        findDay({
+            login: login || router.query.login,
+            date: when || router.query.date,
+        })
+    }, [login, router.query.date, router.query.login, when])
+console.log(data)
     return {
         data,
-        user,
+        // user,
         error,
         fetching,
     };

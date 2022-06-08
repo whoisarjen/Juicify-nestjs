@@ -24,7 +24,7 @@ export class Consumed {
 
     @Column({ type: 'real', default: 1 })
     @Field(() => Float, { description: 'How many times 100g of product' })
-    howMany: number
+    how_many: number
 
     @Column({ type: 'smallint', default: 1 })
     @Field(() => Int, { description: 'Number of meat' })

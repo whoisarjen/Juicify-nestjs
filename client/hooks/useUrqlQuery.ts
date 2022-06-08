@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import { CombinedError, useQuery } from "urql";
 import { useNotify } from "./useNotify";
@@ -18,7 +19,7 @@ const useUrqlQuery = ({ query, pause = false, defaultVariables = null }: UseUrql
 	});
 
 	useEffect(() => {
-		reexecuteQuery()
+		!isEmpty(variables) && reexecuteQuery()
 	}, [reexecuteQuery, variables])
 
 	useEffect(() => {
@@ -26,8 +27,14 @@ const useUrqlQuery = ({ query, pause = false, defaultVariables = null }: UseUrql
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [error?.message])
 
+	const firstKey = data && Object.keys(data)[0]
+console.log('asd', data)
 	return [
-		{ data, fetching, error },
+		{
+			data: firstKey ? data[firstKey] : data,
+			fetching,
+			error
+		},
 		variables => setVariables(variables),
 	] as [{ data: any; fetching: boolean; error: CombinedError | undefined; }, (arg0: any) => void]
 }

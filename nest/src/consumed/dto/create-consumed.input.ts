@@ -11,7 +11,7 @@ export class CreateConsumedInput {
     product: Product;
 
     @Field(() => Float, { description: 'How many times 100g of product' })
-    howMany: number
+    how_many: number
 
     @Field(() => Int, { description: 'Number of meat' })
     meal: number

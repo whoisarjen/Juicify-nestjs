@@ -199,10 +199,10 @@ export class UsersService {
         return null
     }
 
-    async findOne(args: { login: string } | { email: string }, context: Ctx) {
+    async findOneByLogin(login: string, context: Ctx) {
         const user = await this.usersRepository.findOne({
             where: {
-                ...args as any
+                login,
             }
         })
 

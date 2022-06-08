@@ -1,6 +1,8 @@
-import { Resolver, Query, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Args, Int, Context } from '@nestjs/graphql';
 import { UserConsumedService } from './user-consumed.service';
 import { UserConsumed } from './entities/user-consumed.entity';
+import { FindUserConsumedInput } from './dto/find-user-consumed';
+import { Ctx } from 'src/types/context.type';
 
 @Resolver(() => UserConsumed)
 export class UserConsumedResolver {
@@ -12,7 +14,10 @@ export class UserConsumedResolver {
     }
 
     @Query(() => UserConsumed, { name: 'userConsumedPerDay' })
-    findOne() {
-        return this.userConsumedService.findOneDay();
+    findOne(
+        @Args('findUserConsumedInput') findUserConsumedInput: FindUserConsumedInput,
+        @Context() context: Ctx
+    ) {
+        return this.userConsumedService.findOneDay(findUserConsumedInput, context);
     }
 }

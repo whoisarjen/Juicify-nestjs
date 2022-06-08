@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'urql';
 import { PRODUCT_SCHEMA_PROPS } from '../schema/product.schema';
 
-const PRODUCT = `
+export const PRODUCT = `
     id
     name
     proteins
@@ -76,8 +76,8 @@ const useProducts = () => {
         fetching: fetching || loading,
         error,
         findProducts: (find: string) => setFind(find),
-        createProduct: (createProductInput: Omit<PRODUCT_SCHEMA_PROPS, 'id'>) => createProduct({ createProductInput }),
         removeProduct: (id: string) => removeProduct({ id }),
+        createProduct: (createProductInput: Omit<PRODUCT_SCHEMA_PROPS, 'id'>) => createProduct({ createProductInput }),
     }
 }
 

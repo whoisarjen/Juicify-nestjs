@@ -1,30 +1,28 @@
 import { useState, useEffect } from "react";
 import { DialogAddProductsProps } from ".";
 import useProducts from "../../../hooks/useProducts";
-import { useAppDispatch } from "../../../hooks/useRedux";
-import { refreshKey } from "../../../redux/features/key.slice";
 import { PRODUCT_SCHEMA_PROPS } from "../../../schema/product.schema";
-import { insertThoseIDStoDBController } from "../../../utils/db.utils";
-import { deleteIndexedDB, getAllIndexedDB } from "../../../utils/indexedDB.utils";
+import { getAllIndexedDB } from "../../../utils/indexedDB.utils";
 import useCommon from "../../../hooks/useCommon";
+import useConsumed from "../../../hooks/useConsumed";
 
 const useDialogAddProducts = ({ children, index, dailyMeasurement }: DialogAddProductsProps) => {
     const [isDialog, setIsDialog] = useState(false)
     const [loadedProduct, setLoadedProduct] = useState<any>(false)
-    const { t, token} = useCommon()
+    const { t, token, router } = useCommon()
     const [tab, setTab] = useState(0)
     const [open, setOpen] = useState(false)
     const [meal, setMeal] = useState(index)
-    const [checked, setChecked] = useState([])
+    const [checked, setChecked] = useState<PRODUCT_SCHEMA_PROPS[]>([])
     const [refreshChecked, setRefreshChecked] = useState(0)
     const [find, setFind] = useState<any>(null)
+    const { createConsumed } = useConsumed()
 
     const {
         products,
         fetching,
         findProducts,
     } = useProducts()
-    const dispatch = useAppDispatch()
 
     useEffect(() => {
         findProducts(find)
@@ -39,20 +37,20 @@ const useDialogAddProducts = ({ children, index, dailyMeasurement }: DialogAddPr
     }
 
     const addProductsToDiary = async () => {
-        const array: Array<PRODUCT_SCHEMA_PROPS> = JSON.parse(JSON.stringify(checked))
-        const time = new Date().getTime()
-        array.map(async (x: PRODUCT_SCHEMA_PROPS, i: number) => {
-            x.meal = meal
-            x.productid = x.id
-            x.id = 'XD' + time + i
-            await deleteIndexedDB('checked_product', x.productid)
-            return x
-        })
+        console.log(checked)
+        console.log('-----')
+
+        await Promise.all(
+            checked.map(product => createConsumed({
+                meal,
+                how_many: parseFloat(product.how_many as unknown as string),
+                user: token.id,
+                product: parseInt(product.id),
+                date: router.query.date as string,
+            }))
+        )
+
         setChecked([])
-        if (!dailyMeasurement.nutrition_diary) dailyMeasurement.nutrition_diary = []
-        dailyMeasurement.nutrition_diary = dailyMeasurement.nutrition_diary.concat(array)
-        await insertThoseIDStoDBController('daily_measurement', [dailyMeasurement])
-        dispatch(refreshKey('daily_measurement'))
         setIsDialog(false)
     }
 
@@ -63,7 +61,31 @@ const useDialogAddProducts = ({ children, index, dailyMeasurement }: DialogAddPr
         })()
     }, [refreshChecked])
 
-    return { children, isDialog, setIsDialog, t, index, dailyMeasurement, meal, setMeal, open, setOpen, find, setFind, setTab, fetching, token, products, addProductsToDiary, setRefreshChecked, loadedProduct, setLoadedProduct, checked, created, refreshChecked }
+    return {
+        children,
+        isDialog,
+        setIsDialog,
+        t,
+        index,
+        dailyMeasurement,
+        meal,
+        setMeal,
+        open,
+        setOpen,
+        find,
+        setFind,
+        setTab,
+        fetching,
+        token,
+        products,
+        addProductsToDiary,
+        setRefreshChecked,
+        loadedProduct,
+        setLoadedProduct,
+        checked,
+        created,
+        refreshChecked,
+    }
 }
 
 export type useDialogAddProductsProps = ReturnType<typeof useDialogAddProducts>

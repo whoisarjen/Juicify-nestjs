@@ -1,5 +1,4 @@
 import BaseDialogCreateProduct from "./DialogCreateProduct";
-import useDialogCreateProduct from "./useDialogCreateProduct";
 
 export interface DialogCreateProductProps {
     children: any
@@ -7,10 +6,6 @@ export interface DialogCreateProductProps {
     defaultBarcode?: string | number
 }
 
-const DialogCreateProduct = ({ children, created, defaultBarcode }: DialogCreateProductProps) => {
-    const props = useDialogCreateProduct({ children, created, defaultBarcode })
-
-    return <BaseDialogCreateProduct {...props} />
-}
+const DialogCreateProduct = (props: DialogCreateProductProps) => <BaseDialogCreateProduct {...props} />
 
 export default DialogCreateProduct;

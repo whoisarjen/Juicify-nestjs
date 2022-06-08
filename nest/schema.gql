@@ -208,7 +208,7 @@ type Consumed {
   product: Product!
 
   """How many times 100g of product"""
-  howMany: Float!
+  how_many: Float!
 
   """Number of meat"""
   meal: Int!
@@ -232,7 +232,7 @@ type Query {
   confirmRefreshPassword(confirmRefreshPasswordInput: ConfirmRefreshPasswordInput!): User
   products(findProductsInput: FindProductsInput!): [Product!]!
   userConsumedPerDays: [UserConsumed!]!
-  userConsumedPerDay: UserConsumed!
+  userConsumedPerDay(findUserConsumedInput: FindUserConsumedInput!): UserConsumed!
 }
 
 input LoginUserInput {
@@ -259,6 +259,14 @@ input ConfirmRefreshPasswordInput {
 input FindProductsInput {
   """Name of product"""
   name: String!
+}
+
+input FindUserConsumedInput {
+  """Created by"""
+  login: String!
+
+  """Day of eatting"""
+  date: DateTime!
 }
 
 type Mutation {
@@ -301,15 +309,15 @@ input ConfirmUserInput {
 input CreateProductInput {
   """Name of product"""
   name: String!
-
-  """Number of grams per 100g/ml"""
   proteins: Float
-
-  """Number of grams per 100g/ml"""
   carbs: Float
-
-  """Number of grams per 100g/ml"""
+  sugar: Float
   fats: Float
+  fiber: Float
+  salt: Float
+  ethanol: Float
+  barcode: Float
+  is_expecting_check: Boolean
 }
 
 input CreateConsumedInput {
@@ -320,7 +328,7 @@ input CreateConsumedInput {
   product: Int!
 
   """How many times 100g of product"""
-  howMany: Float!
+  how_many: Float!
 
   """Number of meat"""
   meal: Int!
@@ -334,7 +342,7 @@ input UpdateConsumedInput {
   id: ID!
 
   """How many times 100g of product"""
-  howMany: Float!
+  how_many: Float!
 
   """Number of meat"""
   meal: Int!

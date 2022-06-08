@@ -15,23 +15,19 @@ export class ProductsService {
     ) { }
 
     async create(createProductInput: CreateProductInput, context: Ctx) {
-        const user = get(context.req.user, 'id')
+        const user = get(context.req, 'user')
 
         const created = await this.productsRepository.create({
             ...createProductInput,
-            user,
+            user: user.id,
         })
     
-        await this.productsRepository.save(created);
+        const product = await this.productsRepository.save(created);
 
-        return await this.productsRepository.findOne({
-            where: {
-                id: created.id
-            },
-            relations: {
-                user: true,
-            },
-        });
+        return {
+            ...product,
+            user,
+        }
     }
 
     async findAll({ name }: FindProductsInput) {

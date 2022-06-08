@@ -9,15 +9,51 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useDialogCreateProductProps } from './useDialogCreateProduct';
 import styled from 'styled-components'
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { DialogCreateProductProps } from '.';
+import { useNotify } from '../../../hooks/useNotify';
+import { PRODUCT_SCHEMA_PROPS, ProductSchema } from '../../../schema/product.schema';
+import useProducts from '../../../hooks/useProducts';
+import useCommon from '../../../hooks/useCommon';
 
 const ButtonHolder = styled.div`
     width: 100%;
     display: grid;
 `
 
-const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarcode, handleSubmit, register, onSubmit, errors, code, setCode, loading, t }: useDialogCreateProductProps) => {
+const BaseDialogCreateProduct = ({ children, created, defaultBarcode }: DialogCreateProductProps) => {
+    const { t } = useCommon()
+    const [barcode, setBarcode] = useState(defaultBarcode)
+    const [loading, setLoading] = useState(false)
+    const { error } = useNotify()
+    const [isDialog, setIsDialog] = useState(false)
+    const { createProduct } = useProducts()
+
+    const { register, formState: { errors }, handleSubmit } = useForm<Omit<PRODUCT_SCHEMA_PROPS, 'id'>>({
+        resolver: zodResolver(ProductSchema.omit({ id: true }))
+    })
+
+    const onSubmit = async (values: Omit<PRODUCT_SCHEMA_PROPS, 'id'>) => {
+        try {
+            await createProduct({ ...values, ...(barcode && { barcode: barcode as number }) })
+            created(values.name)
+            setIsDialog(false)
+        } catch (e: any) {
+            error(e.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if (defaultBarcode) {
+            setIsDialog(true)
+        }
+    }, [defaultBarcode])
+
     return (
         <>
             <ButtonHolder onClick={() => setIsDialog(true)}>{children}</ButtonHolder>
@@ -38,13 +74,13 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                             helperText={errors.name?.message && t(`notify:${errors.name.message || ''}`)}
                         />
                         {
-                            defaultBarcode > 0 &&
+                            defaultBarcode &&
                             <TextField
                                 margin="dense"
                                 id="name"
                                 label="Barcode"
-                                value={code}
-                                onChange={(e) => setCode(e.target.value)}
+                                value={barcode}
+                                onChange={(e) => setBarcode(e.target.value)}
                                 type="Number"
                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                 fullWidth
@@ -164,6 +200,7 @@ const BaseDialogCreateProduct = ({ children, isDialog, setIsDialog, defaultBarco
                             loading={loading}
                             variant="contained"
                             type="submit"
+                            onClick={handleSubmit(onSubmit)}
                         >
                             {t('Submit')}
                         </LoadingButton>

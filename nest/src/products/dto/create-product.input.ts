@@ -7,19 +7,46 @@ export class CreateProductInput {
 
   @Field(() => Float, {
     nullable: true,
-    description: 'Number of grams per 100g/ml',
   })
   proteins?: number;
 
   @Field(() => Float, {
     nullable: true,
-    description: 'Number of grams per 100g/ml',
   })
   carbs?: number;
 
   @Field(() => Float, {
     nullable: true,
-    description: 'Number of grams per 100g/ml',
+  })
+  sugar?: number;
+
+  @Field(() => Float, {
+    nullable: true,
   })
   fats?: number;
+
+  @Field(() => Float, {
+    nullable: true,
+  })
+  fiber?: number;
+
+  @Field(() => Float, {
+    nullable: true,
+  })
+  salt?: number;
+
+  @Field(() => Float, {
+    nullable: true,
+  })
+  ethanol?: number;
+
+  @Field(() => Float, {
+    nullable: true,
+  })
+  barcode?: number;
+
+  @Field(() => Boolean, {
+    nullable: true,
+  })
+  is_expecting_check?: boolean;
 }
